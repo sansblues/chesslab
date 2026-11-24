@@ -1,0 +1,6 @@
+/data/
+/build/
+/.notes/
+/.heavy.lock
+/.venv/
+__pycache__/
