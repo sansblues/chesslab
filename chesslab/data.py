@@ -102,7 +102,11 @@ def fetch(file: File, verify: bool) -> str:
                 raise
             print(f"retry {attempt}: {file.path.name}: {e}", file=sys.stderr)
             time.sleep(5 * attempt)
-    _check(file, part)
+    try:
+        _check(file, part)
+    except RuntimeError:
+        part.unlink()  # a corrupt part would be resumed again
+        raise
     part.rename(file.path)
     return "downloaded"
 

@@ -79,7 +79,8 @@ def fide(month: str) -> pd.DataFrame:
 
 
 def _complete(game) -> bool:
-    """Standard chess from the start position, with a result and at least one move."""
+    """Standard chess with a result and at least one move. A game recorded from another start
+    position is dropped: most are Chess960; a few are relays with a wrong FEN."""
     h = game.headers
     return (h.get("Variant", "Standard") == "Standard" and h.get("FEN", chess.STARTING_FEN) == chess.STARTING_FEN
             and game.result is not None and bool(game.sans))
