@@ -25,7 +25,8 @@ wins.
 
 ### [Does thinking at the right moments make you better?](experiments/thinking)
 
-Not measurably. Players who spend their time on the right moves do not improve faster than others.
+Not measurably. Over a year, players who spend their time on the right moves gain no more rating than
+others.
 
 ### [Can statistics catch a chess cheater?](experiments/cheating)
 

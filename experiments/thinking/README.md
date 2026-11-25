@@ -1,7 +1,7 @@
 # Does thinking at the right moments make you better?
 
-Not measurably. Players who spend their time where it matters most do not improve faster than others.
-Over the following year, their rating changed by +0.2 Elo per standard deviation of time allocation
+Not measurably. Over a year, players who spend their time on the right moves gain no more rating than
+others: their rating changed by +0.2 Elo per standard deviation of time allocation
 (95% CI −1.8 to +2.2, 3,973 players). The measure is noisy, so the test can only rule out effects
 larger than about 8 to 14 Elo a year.
 
