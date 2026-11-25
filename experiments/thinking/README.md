@@ -9,8 +9,8 @@ year.
 
 ## Findings
 
-- The test was pre-registered: the analysis was fixed before any rating change or game result was
-  computed. The positive control works: the error in a player's games predicts rating change
+- The analysis plan was written before any outcome was computed ([PLAN.md](PLAN.md)). The
+  positive control works: the error in a player's games predicts rating change
   (−12.1 Elo per SD, p < 1e−10).
 - Split-half reliability of allocation quality (3 games against 3): 0.041 (95% CI 0.013 to
   0.073), against 0.45 for the mean think time and 0.53 for its variability. A reliability of 0.7 would need about 162 games a player.

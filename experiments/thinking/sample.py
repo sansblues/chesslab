@@ -1,4 +1,4 @@
-"""Choose the players, games and positions of the test, as pre-registered.
+"""Choose the players, games and positions of the test, as planned (PLAN.md).
 Reads the broadcast games of the baseline year (Jul 2024 - Jun 2025) and the FIDE lists jul25, jul26.
 Writes data/thinking/game_sides.parquet (every baseline game-side of the eligible players: time and
 error) and data/thinking/positions.parquet (4,000 players x 6 games: the positions to analyse)."""
@@ -16,7 +16,7 @@ BASELINE = samples.broadcast_files()[:12]  # 2024-07 ... 2025-06
 
 
 def online(game):
-    """The pre-registered online filter: the core's pattern on BroadcastName, Event and Site together."""
+    """The planned online filter: the core's pattern on BroadcastName, Event and Site together."""
     h = game.headers
     text = (h.get("BroadcastName") or "")[:100] + " " + h.get("Event", "")[:100] + " @" + h.get("Site", "")[:60]
     return bool(samples.ONLINE.search(text)) or max(game.white_elo or 0, game.black_elo or 0) > 2900
@@ -36,7 +36,7 @@ def qualifies(game, clocks, evals):
 
 def read_month(path):
     """(key, game or None) for every standard game of >= 20 plies, in file order; None if it does not
-    qualify. These are the pre-registered rules, not samples.otb(): duplicates are removed before filtering, and
+    qualify. These are the planned rules, not samples.otb(): duplicates are removed before filtering, and
     a non-start FEN is allowed. samples.otb() would change 9 of 146,773 games, and so the random draws."""
     rows = []
     for game in games.read(path):

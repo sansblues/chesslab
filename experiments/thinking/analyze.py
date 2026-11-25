@@ -1,4 +1,4 @@
-"""The pre-registered test and the checks that explain its result.
+"""The planned test (PLAN.md) and the checks that explain its result.
 Reads data/thinking/ (positions, game_sides, stockfish) and the FIDE lists jul24, jul25, jul26.
 Writes results/*.csv."""
 import itertools
