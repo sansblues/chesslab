@@ -1,8 +1,8 @@
-# make data           download the data (about 19 GB) into data/
-# make check          check the shared core against known counts
-# make <experiment>   rebuild one experiment from the data
-# make quick          rebuild every table, chart and README number from results/ (seconds)
-# make all            rebuild everything from the data (hours)
+# make data           download the data into data/ (about 19 GB, once)
+# make check          check the shared core against known counts (about 7 min)
+# make quick          rebuild every chart from results/ (seconds)
+# make all            rerun every experiment from the data (about 8 h)
+# make <experiment>   rerun one: decided, clock, endgames, thinking or cheating
 
 EXPERIMENTS := $(patsubst experiments/%/Makefile,%,$(wildcard experiments/*/Makefile))
 HEAVY := flock $(CURDIR)/.heavy.lock
