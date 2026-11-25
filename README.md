@@ -30,8 +30,9 @@ others.
 
 ### [Can statistics catch a chess cheater?](experiments/cheating)
 
-Only a heavy one. Honest players differ so much that a cheater who removes fewer than 0.9 mistakes a
-game is flagged less than half the time. And with enough games, most honest players look guilty.
+Only a heavy one. Honest players of the same rating differ so much that a cheater who uses the engine
+once a game is caught less than half the time. And everyone has hot streaks: pick the best 5 games of
+an honest player with 10,000 games, and in 59% of cases they look like proof of cheating.
 
 [![Honest players whose best run looks like proof, by games played](experiments/cheating/cheating.svg)](experiments/cheating)
 

@@ -1,8 +1,9 @@
 # Can statistics catch a chess cheater?
 
-Only a heavy one. Honest players of the same rating differ by 0.24 mistakes per game. So a cheater
-who removes fewer than about 0.9 mistakes per game is flagged less than half the time by a test
-that wrongly flags 1 honest player in 10,000, however many games they play.
+Only a heavy one. Honest players of the same rating differ by 0.24 mistakes per game. A cheater
+who uses the engine once a game avoids fewer mistakes than that spread can hide, so a test that
+wrongly flags 1 honest player in 10,000 catches them less than half the time, however many games
+they play.
 
 ![Honest players whose best 5-game run looks like 1-in-10,000 proof: 9% at 1,000 games, 59% at 10,000](cheating.svg)
 
@@ -17,9 +18,10 @@ cheaters are simulated):
 - One who asks the engine at 1 to 3 random critical moments of an over-the-board game: 123 to
   6,219 games, even if honest players did not differ.
 
-The chart shows the reverse trap. Take an honest player's best 5-game run and test it as if it had
-been chosen in advance: it looks like proof. With 10,000 games, 59% of honest players have such a
-run.
+The chart shows the reverse trap: hot streaks. The more games a player has, the more 5-game stretches
+there are, and the best of thousands is extreme by chance alone. Test that hand-picked streak as if it
+had been chosen in advance, and it looks like proof. With 10,000 games, 59% of honest players have
+such a streak.
 
 ## Reproduce
 
