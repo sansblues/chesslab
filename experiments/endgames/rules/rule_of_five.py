@@ -44,8 +44,9 @@ def rule_of_five(p):
 
 
 def sharpened(p):
-    """Ours: a win claim only, with the cutting rook below the pawn's rank."""
+    """Ours: sum 6 or more and the cutting rook below the pawn's rank."""
     return (total(p) >= 6) & (rank(p.white_rook) < rank(p.pawn))
 
 
-RULES = rule_of_five, sharpened
+RULES = (rule_of_five,)
+WIN_CLAIMS = (sharpened,)

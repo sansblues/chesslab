@@ -60,7 +60,7 @@ def main():
                "R5, Black to move": c_to_f & long_side & ~data.white_to_move,
                "R5, knight pawn": pawn_file.isin([2, 7]) & long_side & data.white_to_move}
     rows = [{"region": name, "rule": f.__name__} | counts(data, mask, f(data))
-            for name, mask in regions.items() for f in rule.RULES]
+            for name, mask in regions.items() for f in rule.RULES + rule.WIN_CLAIMS]
     pd.DataFrame(rows).to_csv(HERE / "results" / "rule_of_five_rules.csv", index=False)
 
     r6 = data[r5 & (rank(data.white_rook) <= pawn_rank)]  # the cutting rook not ahead of the pawn

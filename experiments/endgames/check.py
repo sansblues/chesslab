@@ -3,11 +3,12 @@
 usage: uv run python experiments/endgames/check.py rules/rule_of_five.py
 
 A rule file names its MATERIAL, such as "KRPvKR" (White has the pawns), and holds either
-- region(p) and RULES. p is an endgame.Slice: the positions with White's pawns on fixed squares
-  (p.pawns, ints) and the other pieces anywhere (numpy arrays such as p.black_king). region says
-  which positions the rules are about, each rule whether White wins. Combine arrays with & | ~;
-  a test of the pawns alone may return a plain False. The checker counts every legal position of
-  the region up to the a-h mirror, so a region must be its own mirror image.
+- region(p) with RULES, WIN_CLAIMS or both. p is an endgame.Slice: the positions with
+  White's pawns on fixed squares (p.pawns, ints) and the other pieces anywhere (numpy arrays such as
+  p.black_king). region says which positions the rules are about. A rule says win (True) or draw
+  (False); a win claim says win (True) or nothing (False). Combine arrays with & | ~; a test of the
+  pawns alone may return a plain False. The checker counts every legal position of the region up to
+  the a-h mirror, so a region must be its own mirror image.
 - START and policy(board), Black's move. The checker plays the policy against every White move
   from START. It stops at the first policy move that turns the tablebase draw into a loss, or,
   if there is none, proves that the policy holds the draw."""
@@ -25,38 +26,41 @@ EXAMPLES = 2
 
 
 def check_rules(rule):
+    rules, claims = getattr(rule, "RULES", ()), getattr(rule, "WIN_CLAIMS", ())
     counts, examples = defaultdict(float), defaultdict(list)
     for part in endgame.slices(rule.MATERIAL):
         selected = endgame.mask(rule.region, part)
         if selected is None:
             continue
         wins = part.white_wins
-        said = {f: np.broadcast_to(f(part), part.shape) for f in rule.RULES}
+        said = {f: np.broadcast_to(f(part), part.shape) for f in [*rules, *claims]}
         for side, to_move in (("White", part.white_to_move), ("Black", ~part.white_to_move)):
             here = selected & to_move
-            counts[side, "positions"] += part.weight * np.count_nonzero(here)
+            counts[side] += part.weight * np.count_nonzero(here)
             counts[side, "wins"] += part.weight * np.count_nonzero(here & wins)
-            for f in rule.RULES:
-                for kind, wrong in (("false wins", said[f] & ~wins), ("false draws", ~said[f] & wins)):
-                    wrong &= here
-                    counts[side, f.__name__, kind] += part.weight * np.count_nonzero(wrong)
-                    found = examples[f.__name__, kind]
-                    if len(found) < EXAMPLES:
-                        found += [part.board(i) for i in np.flatnonzero(wrong)[:EXAMPLES - len(found)]]
+            for f, win in said.items():
+                other = ("claimed win", win) if f in claims else ("false draw", ~win & wins)
+                for kind, found in (("false win", win & ~wins), other):
+                    found = found & here
+                    counts[side, f, kind] += part.weight * np.count_nonzero(found)
+                    shown = examples[f, kind]
+                    if kind != "claimed win" and len(shown) < EXAMPLES:
+                        shown += [part.board(i) for i in np.flatnonzero(found)[:EXAMPLES - len(shown)]]
 
-    print(f"{'side to move':12}  {'positions':>13}  {'White wins':>10}  {'rule':16}  {'accuracy':>8}  "
-          f"{'false wins':>12}  {'false draws':>12}")
     for side in ("White", "Black"):
-        positions = counts[side, "positions"]
-        if not positions:
+        if not counts[side]:
             continue
-        for f in rule.RULES:
-            false_wins, false_draws = counts[side, f.__name__, "false wins"], counts[side, f.__name__, "false draws"]
-            print(f"{side:12}  {positions:13,.0f}  {counts[side, 'wins'] / positions:10.1%}  {f.__name__:16}  "
-                  f"{1 - (false_wins + false_draws) / positions:8.1%}  {false_wins:12,.0f}  {false_draws:12,.0f}")
-    for (name, kind), boards in examples.items():
+        print(f"{side} to move: {counts[side]:,.0f} positions, White wins {counts[side, 'wins'] / counts[side]:.1%}")
+        for f in rules:
+            false_wins, false_draws = counts[side, f, "false win"], counts[side, f, "false draw"]
+            print(f"  {f.__name__:16}{1 - (false_wins + false_draws) / counts[side]:.1%} right: "
+                  f"{false_wins:,.0f} false wins, {false_draws:,.0f} false draws")
+        for f in claims:
+            print(f"  {f.__name__:16}{counts[side, f, 'claimed win']:,.0f} claimed wins, "
+                  f"{counts[side, f, 'false win']:,.0f} wrong")
+    for (f, kind), boards in examples.items():
         for board in boards:
-            print(f"{name}, {kind[:-1]}: {board.fen()}")
+            print(f"{f.__name__}, {kind}: {board.fen()}")
 
 
 def check_policy(rule):
