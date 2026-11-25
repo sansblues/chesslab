@@ -1,4 +1,4 @@
-"""Check the core against counts known from the research (make check, about 7 minutes).
+"""Check the core against known counts (make check, about 7 minutes).
 The numbers are of the data in data/; see chesslab.data."""
 import collections
 import random
@@ -47,8 +47,6 @@ def lichess():
 
 def otb():
     counts = collections.Counter(games.otb_speed(game.clocks) for game in samples.otb())
-    # The research had rapid 134,568 and classical 488,858: it kept 4 classical games recorded from
-    # another start position, and dropped 3 games (1 rapid) that failed its replay check.
     report("OTB games", 743_828, sum(counts.values()))
     for speed, n in (("blitz", 82_043), ("rapid", 134_569), ("classical", 488_856), ("unknown", 38_360)):
         report(f"  {speed}", n, counts[speed])

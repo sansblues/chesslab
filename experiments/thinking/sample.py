@@ -16,7 +16,7 @@ BASELINE = samples.broadcast_files()[:12]  # 2024-07 ... 2025-06
 
 
 def online(game):
-    """The research's own filter: the core's pattern on BroadcastName, Event and Site together."""
+    """The pre-registered online filter: the core's pattern on BroadcastName, Event and Site together."""
     h = game.headers
     text = (h.get("BroadcastName") or "")[:100] + " " + h.get("Event", "")[:100] + " @" + h.get("Site", "")[:60]
     return bool(samples.ONLINE.search(text)) or max(game.white_elo or 0, game.black_elo or 0) > 2900
@@ -36,8 +36,8 @@ def qualifies(game, clocks, evals):
 
 def read_month(path):
     """(key, game or None) for every standard game of >= 20 plies, in file order; None if it does not
-    qualify. These are the research's rules, not samples.otb(): it removed duplicates before filtering and
-    kept 6 games with a non-start FEN. The core rules change 9 of 146,773 games, and so the random draws."""
+    qualify. These are the pre-registered rules, not samples.otb(): duplicates are removed before filtering, and
+    a non-start FEN is allowed. samples.otb() would change 9 of 146,773 games, and so the random draws."""
     rows = []
     for game in games.read(path):
         if game.headers.get("Variant", "Standard") not in ("Standard", "") or len(game.sans) < 20:

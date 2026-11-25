@@ -24,7 +24,7 @@ def win(cp):
 
 
 def speed(clock):
-    """The research's rule, from White's first clock."""
+    """Speed from White's first clock: classical from 50 min, rapid from 9 min."""
     if not clock:
         return "unknown"
     return "classical" if clock >= 3000 else "rapid" if clock >= 540 else "blitz"
@@ -56,7 +56,7 @@ def player_games(game):
 
 
 def sample():
-    """The research's draw: classical games with clocks and evals, average rating 1400-2799,
+    """The engine sample: classical games with clocks and evals, average rating 1400-2799,
     rating gap ≤ 300; 60 games per 200-point band of the average, seed 1."""
     bands = {}
     for game in games.read(SOURCE):

@@ -45,7 +45,7 @@ def spread(classical):
 
 
 def games_needed(delta, honest_sd, cheater_sd, between_sd):
-    """Fewest games for a test of a player's mean against the honest mean of his rating to reach
+    """Fewest games for a test of a player's mean against the honest mean of their rating to reach
     the false-positive rate and the power; inf if no number of games does."""
     n = np.arange(1, 1_000_001)
     threshold = Z_FPR * np.sqrt(honest_sd**2 / n + between_sd**2)
@@ -54,8 +54,8 @@ def games_needed(delta, honest_sd, cheater_sd, between_sd):
 
 
 def engine_every_move(classical, between_sd):
-    """Model A: the cheater sees the engine on every move and overrides his k worst moves of each game.
-    His mistakes per game fall from m to max(m - k, 0)."""
+    """Model A: the cheater sees the engine on every move and overrides their k worst moves of each game.
+    Their mistakes per game fall from m to max(m - k, 0)."""
     rows = []
     for band in BANDS:
         honest = classical[classical.elo // 200 * 200 == band].mistakes
@@ -91,7 +91,7 @@ def engine_at_critical_moments(positions):
 
 
 def cherry_picking(classical, window=5, players=1000):
-    """An honest player's best run of `window` games (lowest mean loss per move) among all his games,
+    """An honest player's best run of `window` games (lowest mean loss per move) among all their games,
     tested as if it had been chosen in advance. Per-game values drawn from 2000-2399 classical games."""
     x = classical[classical.elo.between(2000, 2399)].eval("loss / moves.clip(lower=1)").to_numpy()
     rng = np.random.default_rng(0)
