@@ -23,16 +23,6 @@ int fathom_wdl(uint64_t w, uint64_t b, uint64_t k, uint64_t q, uint64_t r, uint6
     return success ? v : 98;
 }
 
-/* DTZ from the side to move (Syzygy's convention); 9999 = invalid position, 9998 = failed. */
-int fathom_dtz(uint64_t w, uint64_t b, uint64_t k, uint64_t q, uint64_t r, uint64_t bi,
-               uint64_t n, uint64_t pa, int white_to_move) {
-    Pos p;
-    int success;
-    if (!make_pos(&p, w, b, k, q, r, bi, n, pa, white_to_move)) return 9999;
-    int v = probe_dtz(&p, &success);
-    return success ? v : 9998;
-}
-
 /*
  * Write one code per index of every placement of the given pieces, both sides to move:
  * 0..4 = WDL + 2 from the side to move, 5 = two pieces on one square, 6 = illegal (side not to

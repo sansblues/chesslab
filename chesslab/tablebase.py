@@ -38,7 +38,7 @@ def wdl(board: chess.Board) -> int | None:
 def _fathom():
     lib = ctypes.CDLL(str(ROOT / "build" / "fathom.so"))
     lib.fathom_init.argtypes = [ctypes.c_char_p]
-    lib.fathom_wdl.argtypes = lib.fathom_dtz.argtypes = [ctypes.c_uint64] * 8 + [ctypes.c_int]
+    lib.fathom_wdl.argtypes = [ctypes.c_uint64] * 8 + [ctypes.c_int]
     lib.fathom_dump.argtypes = [ctypes.c_int, ctypes.POINTER(ctypes.c_int), ctypes.c_void_p]
     lib.fathom_dump.restype = ctypes.c_long
     if lib.fathom_init(str(SYZYGY).encode()) < 3:
@@ -56,12 +56,6 @@ def fathom_wdl(board: chess.Board) -> int | None:
     The half-move clock, castling rights and en passant are taken as none. None if it fails."""
     value = _fathom().fathom_wdl(*_bitboards(board))
     return None if value in (98, 99) else value
-
-
-def fathom_dtz(board: chess.Board) -> int | None:
-    """Syzygy DTZ from the side to move, via Fathom. None if it fails."""
-    value = _fathom().fathom_dtz(*_bitboards(board))
-    return None if value in (9998, 9999) else value
 
 
 def enumerate_wdl(signature: str) -> np.ndarray:
