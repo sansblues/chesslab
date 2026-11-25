@@ -45,7 +45,7 @@ make data    # download the data, about 19 GB
 make all     # rerun everything, about 8 hours
 ```
 
-It needs Linux, [uv](https://docs.astral.sh/uv/), make and a C compiler.
+It requires Linux, [uv](https://docs.astral.sh/uv/), make and a C compiler.
 
 ## Data
 
