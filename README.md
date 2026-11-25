@@ -11,7 +11,7 @@ to 55% for 2400+ players over the board.
 
 ### [What is clock time at move 20 worth?](experiments/clock)
 
-In classical chess, 10% more clock at move 20 is worth 1.1 points per 100 games, and 1.9 for
+In classical chess, 10% more clock at move 20 goes with 1.1 more points per 100 games, and 1.9 for
 players who are habitually short of time.
 
 [![Extra clock at move 20 is worth most when little is left](experiments/clock/clock.svg)](experiments/clock)
@@ -62,7 +62,7 @@ data/           downloads and intermediate files (not in git)
 
 - [Lichess open database](https://database.lichess.org): rated games of Oct 2026 (CC0).
 - [Lichess broadcasts](https://database.lichess.org): over-the-board games, Jul 2024 to
-  Oct 2026 (CC BY-SA).
+  Oct 2026 (CC BY-SA 4.0).
 - [FIDE rating lists](https://ratings.fide.com), Jul 2023 to Nov 2026.
 - [Syzygy tablebases](https://tablebase.lichess.ovh/tables/standard): all 3-5 piece tables and
   60 six-piece tables.

@@ -1,9 +1,9 @@
 # What is clock time at move 20 worth?
 
-In classical over-the-board chess, keeping 10% more of the clock at move 20 is worth about 1.1 points
+In classical over-the-board chess, 10% more of the clock at move 20 goes with about 1.1 more points
 per 100 games (8 Elo), and 1.9 (14 Elo) for players who are habitually short of time. These are net
-values: saving the time early costs about 0.4 points in errors. The data are observational, so a
-confirmation on fresh data is needed.
+values: saving the time early costs about 0.4 points in errors. The data are observational, so these
+are estimates within players, not proof, and a confirmation on fresh data is needed.
 
 ![Extra clock at move 20 is worth most when little is left: 4 points per 100 games at 10% left, under 1 at 60%](clock.svg)
 
