@@ -48,13 +48,13 @@ def save(table, name):
 
 def positions():
     """Every analysed position not yet decided (|deep eval| <= 300) with its value of thinking."""
-    S = pd.concat(pd.read_parquet(f, columns=["fen", "cp_best", "cp_s4", "cp_s8"])
+    S = pd.concat(pd.read_parquet(f, columns=["fen", "best_cp", "depth4_cp", "depth8_cp"])
                   for f in sorted((DATA / "thinking" / "stockfish").glob("chunk_*.parquet")))
     P = pd.read_parquet(DATA / "thinking" / "positions.parquet").merge(S, on="fen")
     analysed = len(P)
-    P = P[P.cp_best.abs() <= 300].copy()
-    P["voc"] = np.maximum(0, win(P.cp_best) - win(P.cp_s4))  # what a quick (depth-4) look costs
-    P["voc8"] = np.maximum(0, win(P.cp_best) - win(P.cp_s8))
+    P = P[P.best_cp.abs() <= 300].copy()
+    P["voc"] = np.maximum(0, win(P.best_cp) - win(P.depth4_cp))  # what a quick (depth-4) look costs
+    P["voc8"] = np.maximum(0, win(P.best_cp) - win(P.depth8_cp))
     P["log_time"] = np.log1p(P.think_time)
     P["paced_time"] = P.log_time - P.groupby(["fide_id", "game"]).log_time.transform("mean")
     P["error"] = np.maximum(0, win(P.eval_before) - win(P.eval_after))  # stored Lichess evals
