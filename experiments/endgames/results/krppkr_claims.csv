@@ -1,0 +1,19 @@
+claim,side_to_move,positions,white_wins
+all positions,White,5147867921,4772461642
+all positions,Black,5444504718,3273016355
+two rook pawns (a+h),White,89477660,87265170
+two rook pawns (a+h),Black,53152025,46009956
+"two rook pawns, Black king blockading a pawn",White,18807878,18056048
+"two rook pawns, Black king blockading a pawn",Black,10772659,8643800
+"doubled pawns, Black king cut off on the short side",White,168122,99360
+"doubled pawns, Black king cut off on the short side",Black,142642,46746
+"doubled pawns, Black king cut off on the long side",White,167063,161562
+"doubled pawns, Black king cut off on the long side",Black,141583,111690
+"doubled pawns, Black king in front",White,24043086,2957618
+"doubled pawns, Black king in front",Black,14305699,214301
+connected pawns,White,617500226,587363118
+connected pawns,Black,404494964,356279351
+f+h pawns on the 6th rank or beyond,White,19762787,19354461
+f+h pawns on the 6th rank or beyond,Black,12272783,11623338
+"f+h pawns on the 6th rank or beyond, Black king in front",White,1259273,1075466
+"f+h pawns on the 6th rank or beyond, Black king in front",Black,554334,286404

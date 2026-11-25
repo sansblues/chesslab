@@ -1,0 +1,9 @@
+region,rule,positions,white_wins,predicted_wins,false_wins,false_draws
+R5,rule_of_five,8990,7561,6446,84,1199
+R5,sharpened,8990,7561,3493,0,4068
+"R5, king on the short side",rule_of_five,1730,744,714,153,183
+"R5, king on the short side",sharpened,1730,744,527,103,320
+"R5, Black to move",rule_of_five,8990,5888,6446,948,390
+"R5, Black to move",sharpened,8990,5888,3493,295,2690
+"R5, knight pawn",rule_of_five,9155,8210,7883,156,483
+"R5, knight pawn",sharpened,9155,8210,3789,42,4463

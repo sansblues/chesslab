@@ -1,0 +1,9 @@
+rook_pawn_rank,bishop_pawn_rank,side_to_move,positions,white_wins
+6,6,White,560987,447523
+6,6,Black,292857,111305
+6,7,White,204673,179589
+6,7,Black,87819,55487
+7,6,White,292244,255443
+7,6,Black,142152,104340
+7,7,White,201369,192911
+7,7,Black,31506,15272
