@@ -17,7 +17,8 @@ rook pawns win 97.5% of quiet positions with White to move: they are not "often 
   pawn, 5,300 positions) reaches 91.6% with 2 leaves, 95.0% with 7, 96.8% with 21, 98.1% with 45
   and 99.1% with 75.
 - **Philidor** followed literally loses the textbook position `3k4/7R/r7/3PK3/8/8/8/8 b`:
-  1...Rb6 2.Rh8+ Kc7 3.d6+ Kd7?? (only 3...Rxd6 draws).
+  1...Rb6 2.Rh8+ Kc7 3.d6+ Kd7?? (only 3...Rxd6 draws). This tests the recipe as written: it says
+  to step the king when checked, so it misses the free pawn; any player would take it.
 - **Rook and two pawns vs rook** (10,592,372,639 legal positions; win rates of quiet positions,
   White / Black to move):
   - Two rook pawns (a+h) win 97.5% / 86.6%; with the Black king blockading a pawn still
