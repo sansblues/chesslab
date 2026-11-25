@@ -56,9 +56,9 @@ run.
   against 4 million 5-game runs chosen in advance (`cherry_picking.csv`). The median naive p is
   about 1 / games: 9.1e-4 at 1,000 games, 7.9e-5 at 10,000.
 - Related work: Regan's model of move choice, used by FIDE; Turk & Polson 2026, signatures of play
-  and an anytime-valid sequential test (arXiv 2606.18544); "ChessFraud: Exploring the Capabilities of
-  Human-Aligned Models for Cheating Detection in Online Chess" (doi 10.1145/3770855.3817587); Keren 2026,
-  the selective cheater of model A (arXiv 2601.05386).
+  and an anytime-valid sequential test (arXiv 2606.18544); "ChessFraud: Exploring the Capabilities
+  of Human-Aligned Models for Cheating Detection in Online Chess" (doi 10.1145/3770855.3817587);
+  Keren 2026, the selective cheater of model A (arXiv 2601.05386).
 
 ## Limits
 
