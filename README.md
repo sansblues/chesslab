@@ -9,12 +9,12 @@ to 55% for 2400+ players over the board.
 
 [![The clock's share of decisive points lost grows with rating](experiments/decided/decided.svg)](experiments/decided)
 
-### [What is clock time at move 20 worth?](experiments/clock)
+### [Does more clock at move 20 go with better results?](experiments/clock)
 
-In classical chess, 10% more clock at move 20 goes with 1.1 more points per 100 games, and 1.9 for
+In classical chess, 10% more clock at move 20 goes with 1.1 more points per 100 games, and 2.0 for
 players who are habitually short of time.
 
-[![Extra clock at move 20 is worth most when little is left](experiments/clock/clock.svg)](experiments/clock)
+[![Extra clock at move 20 goes with the most points when little is left](experiments/clock/clock.svg)](experiments/clock)
 
 ### [Do textbook endgame rules hold under perfect play?](experiments/endgames)
 

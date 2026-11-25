@@ -9,8 +9,8 @@ HERE = Path(__file__).parent
 curve = pd.read_csv(HERE / "results" / "value_curve.csv")
 otb = pd.read_csv(HERE / "results" / "value.csv").query("population == 'otb_classical'").set_index("group")
 
-fig, ax = plot.figure("Extra clock at move 20 is worth most when little is left",
-                      "Points per 100 games from 10% more of the budget (base + 40 × increment); 95% CI")
+fig, ax = plot.figure("Extra clock at move 20 goes with the most points when little is left",
+                      "Points per 100 games with 10% more of the budget (base + 40 × increment); 95% CI")
 ax.fill_between(curve.clock_left * 100, curve.gain_low * 100, curve.gain_high * 100, color=plot.BLUE, alpha=0.15,
                 linewidth=0)
 ax.plot(curve.clock_left * 100, curve.gain * 100, color=plot.BLUE, marker="o", markersize=4)
