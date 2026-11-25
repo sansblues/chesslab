@@ -2,7 +2,7 @@
 
 Tiny experiments in chess.
 
-### [Where are chess games won and lost?](experiments/decided)
+### [Where are chess games lost?](experiments/decided)
 
 Mostly to plain mistakes. But the higher the rating, the more the clock decides: over the board at
 2400+, it costs 55% of the points lost.

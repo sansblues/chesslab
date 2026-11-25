@@ -1,4 +1,4 @@
-# Where are chess games won and lost?
+# Where are chess games lost?
 
 Mostly by plain mistakes in the opening and middlegame. But the clock's share of the points lost
 grows with rating: online from 25% below 1200 to 38% at 2100–2399, and over the board from 22%
