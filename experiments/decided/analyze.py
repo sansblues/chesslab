@@ -31,24 +31,28 @@ def band(elo, source):
 
 
 def load_games():
-    """Every game once: online games of all speeds, over-the-board classical games (first relay)."""
-    g = pd.concat([pd.read_parquet(p).assign(file=p.name.split(".")[0]) for p in sorted(IN.glob("*.games.parquet"))],
-                  ignore_index=True)
-    g["source"] = np.where(g.file.str.startswith("lichess"), "online", "otb")
-    otb = g.source == "otb"
-    g = g[~otb | (~g.key.duplicated() & (g.speed == "classical"))].copy()
+    """The replayed games, each once: online games of all speeds, over-the-board classical games (first relay).
+    The online games with evals (someone asked for an analysis) are post-stratified to all online games: cells of
+    speed x average band x how the game ended x length. Read file by file: memory."""
+    kept, cells, seen = [], [], set()
+    for path in sorted(IN.glob("*.games.parquet")):
+        g = pd.read_parquet(path).assign(file=path.name.split(".")[0])
+        if path.name.startswith("broadcast"):  # the first relay, in file order
+            first = ~g.key.isin(seen) & ~g.key.duplicated()
+            seen.update(g.key)
+            g = g[first & (g.speed == "classical")].assign(source="otb")
+        else:
+            g = g.assign(source="online")
+            length = pd.cut(g.plies, [0, 40, 80, 120, np.inf]).astype(str)
+            g["cell"] = g.speed + "|" + band((g.white_elo + g.black_elo) / 2, g.source).fillna("?") + "|" + g.end + "|" + length
+            cells.append(g.groupby("cell").has_eval.agg(["size", "sum"]))
+        kept.append(g[g.final_fen.notna()])
+    g = pd.concat(kept, ignore_index=True)
+    cells = pd.concat(cells).groupby(level=0).sum()
+    g["weight"] = g.cell.map(cells["size"] / cells["sum"] * cells["sum"].sum() / cells["size"].sum()).fillna(1.0)
     g["white_band"] = band(g.white_elo, g.source)
     g["black_band"] = band(g.black_elo, g.source)
-    g["band"] = band((g.white_elo + g.black_elo) / 2, g.source)
-    # Post-stratify the online games with evals (someone asked for an analysis) to all online games:
-    # cells of speed x average band x how the game ended x length.
-    online = g[g.source == "online"]
-    cells = [online.speed, online.band.fillna("?"), online.end, pd.cut(online.plies, [0, 40, 80, 120, np.inf])]
-    by_cell = online.groupby(cells, observed=True).has_eval
-    g["weight"] = 1.0
-    g.loc[online.index, "weight"] = (by_cell.transform("size") / by_cell.transform("sum")
-                                     * online.has_eval.sum() / len(online))
-    return g[g.final_fen.notna()]
+    return g
 
 
 def file_moves(path, games):
