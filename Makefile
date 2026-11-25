@@ -6,7 +6,7 @@
 
 EXPERIMENTS := $(patsubst experiments/%/Makefile,%,$(wildcard experiments/*/Makefile))
 HEAVY := flock $(CURDIR)/.heavy.lock
-PY := uv run python -I
+PY := uv run python
 export HEAVY PY
 
 .PHONY: quick all data check $(EXPERIMENTS)

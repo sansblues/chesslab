@@ -1,6 +1,6 @@
 """Check an endgame rule against the Syzygy tablebases.
 
-usage: uv run python -I experiments/endgames/check.py rules/rule_of_five.py
+usage: uv run python experiments/endgames/check.py rules/rule_of_five.py
 
 A rule file names its MATERIAL, such as "KRPvKR" (White has the pawns), and holds either
 - region(p) and RULES. p is an endgame.Slice: the positions with White's pawns on fixed squares
@@ -16,10 +16,8 @@ from collections import defaultdict
 from pathlib import Path
 
 import chess
-import numpy as np
-
-sys.path.insert(0, str(Path(__file__).parent))  # python -I leaves the script's folder out
 import endgame
+import numpy as np
 
 from chesslab import tablebase
 

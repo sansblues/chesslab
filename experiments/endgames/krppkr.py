@@ -4,16 +4,13 @@ and the Lichess and over-the-board samples; keeps per-file counts in data/endgam
 results/krppkr_pairs.csv     White's wins per pair of pawn files: quiet positions and real games
 results/krppkr_claims.csv    the claims, by side to move
 results/krppkr_fh_ranks.csv  f- and h-pawn on the 6th rank or beyond, Black king in front, by rank"""
-import sys
 from multiprocessing import Pool
 from pathlib import Path
 
 import chess
+import endgame
 import numpy as np
 import pandas as pd
-
-sys.path.insert(0, str(Path(__file__).parent))  # python -I leaves the script's folder out
-import endgame
 from endgame import distance, file, rank
 
 from chesslab import DATA, samples, tablebase

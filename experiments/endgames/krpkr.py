@@ -2,14 +2,11 @@
 results/rule_of_five_by_sum.csv   region R5: positions and White wins by the rule's sum
 results/rule_of_five_rules.csv    both rules on R5 and on R5 with one condition changed
 results/rule_of_five_tree.csv     the shortest exact rule: decision trees on R6, by depth"""
-import sys
 from pathlib import Path
 
+import endgame
 import numpy as np
 import pandas as pd
-
-sys.path.insert(0, str(Path(__file__).parent))  # python -I leaves the script's folder out
-import endgame
 from endgame import file, rank
 
 HERE = Path(__file__).parent

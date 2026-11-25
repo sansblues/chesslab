@@ -1,7 +1,7 @@
 # make        rebuild results/ from the data (heavy, about 2.5 h: Stockfish takes 2 h)
 # make quick  rebuild the chart from results/ (seconds)
 HEAVY ?= flock $(abspath ../../.heavy.lock)
-PY ?= uv run python -I
+PY ?= uv run python
 
 .PHONY: all quick
 

@@ -4,7 +4,6 @@ results/kpk_depth.csv: for each rule and search depth, the positions it gets wro
 The rule judges the leaves of a full-width search of d plies (minimax, d = 0 is the rule alone). A
 capture or promotion ends a line with its tablebase value. Positions: all legal KPvK positions,
 pawn on files a-d (the others are their mirror images); White has the pawn."""
-import sys
 from collections import deque
 from pathlib import Path
 from typing import NamedTuple
@@ -12,8 +11,6 @@ from typing import NamedTuple
 import chess
 import numpy as np
 import pandas as pd
-
-sys.path.insert(0, str(Path(__file__).parent))  # python -I leaves the script's folder out
 from endgame import distance, file, rank
 
 from chesslab import tablebase

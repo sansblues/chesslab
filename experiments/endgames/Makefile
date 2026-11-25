@@ -2,7 +2,7 @@
 # make quick   rebuild the chart from results/ (seconds)
 # make slices  build the C part of the checker (once)
 HEAVY ?= flock $(abspath ../../.heavy.lock)
-PY ?= uv run python -I
+PY ?= uv run python
 SLICES := ../../data/endgames/slices.so
 
 all: slices
