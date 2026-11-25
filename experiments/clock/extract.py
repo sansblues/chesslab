@@ -39,7 +39,7 @@ def outcome_class(cp):
 
 
 def sides(game, base, inc, elos):
-    """The sides of a game that reach the opponent's 20th move and pass the sample rules."""
+    """The sides of a game in which both players made their 20th move, if they pass the sample rules."""
     n = len(game.sans)
     if n < 2 * C:
         return []
@@ -54,8 +54,6 @@ def sides(game, base, inc, elos):
     rows = []
     for color in (0, 1):
         ply, opponent_ply = 2 * (C - 1) + color, 2 * (C - 1) + 1 - color
-        if n < ply + 2:
-            continue
         own = np.arange(color, n, 2)
         early, late = own[:C], own[C:]
         clock_left = (clock[ply] + (40 - C) * inc) / budget
