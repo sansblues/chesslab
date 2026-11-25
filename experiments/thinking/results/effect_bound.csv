@@ -1,3 +1,3 @@
 reliability,spearman_brown,elo_per_true_sd_max
-estimate,0.0817392,7.37327
-ci_low,0.0272958,12.7593
+estimate,0.0795862,7.8451
+ci_low,0.0261748,13.6797

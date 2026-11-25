@@ -1,4 +1,4 @@
 measure,split_half,spearman_brown,games_for_0_7,split_half_low,split_half_high
-allocation_quality,0.0426111,0.0817392,157.276,0.0138367,0.0738954
+allocation_quality,0.0414422,0.0795862,161.91,0.013261,0.0734162
 mean_log_time,0.449156,0.619886,8.5848,,
 time_variability,0.532012,0.694527,6.15759,,
