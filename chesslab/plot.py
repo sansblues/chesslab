@@ -1,34 +1,36 @@
-"""The house style of the charts: quiet greys, one blue accent, a title that states the finding."""
+"""Chart style: blue for what matters, grey for the rest, as few words as possible."""
 import matplotlib
 
 matplotlib.use("svg")
 import matplotlib.pyplot as plt
 
-BLUE = "#2a78d6"  # the accent: the one thing the chart is about
-GREY = "#b4b2a9"  # everything else
-DARK_GREY = "#898781"  # a second grey, if one is needed
-INK = "#0b0b0b"
-MUTED = "#52514e"
+BLUE = "#2a78d6"
+GREY = "#b4b2a9"
+INK = "#2b2b2b"
+MUTED = "#6b6a66"
 SURFACE = "#fcfcfb"
 
 plt.rcParams.update({
     "figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "savefig.facecolor": SURFACE,
     "font.family": "sans-serif", "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"], "font.size": 10,
     "text.color": INK, "axes.labelcolor": MUTED, "xtick.color": MUTED, "ytick.color": MUTED,
-    "axes.edgecolor": "#c3c2b7", "axes.linewidth": 0.8, "axes.spines.top": False, "axes.spines.right": False,
-    "axes.grid": True, "axes.grid.axis": "y", "grid.color": "#e1e0d9", "grid.linewidth": 0.8,
-    "axes.axisbelow": True, "xtick.major.size": 0, "ytick.major.size": 0,
-    "axes.prop_cycle": matplotlib.cycler(color=[BLUE, GREY, DARK_GREY]),
-    "lines.linewidth": 2, "legend.frameon": False, "svg.fonttype": "none", "svg.hashsalt": "chesslab",
+    "axes.edgecolor": "#d6d5ce", "axes.linewidth": 0.8, "axes.grid": False,
+    "axes.spines.top": False, "axes.spines.right": False, "axes.spines.left": False,
+    "xtick.major.size": 0, "ytick.major.size": 0, "lines.linewidth": 2, "svg.fonttype": "none",
+    "svg.hashsalt": "chesslab",
 })
 
 
-def figure(title: str, subtitle: str = "", size=(7, 3.6)):
-    """A figure with one axes. The title states the finding; the subtitle says what is plotted."""
+def figure(unit: str, size=(6.4, 3.2)):
+    """A figure with one axes; the unit of the y-axis sits above it, where it is read first."""
     fig, ax = plt.subplots(figsize=size, layout="constrained")
-    ax.set_title(title, loc="left", fontsize=12.5, fontweight="bold", pad=28 if subtitle else 12)
-    ax.annotate(subtitle, (0, 1), xycoords="axes fraction", xytext=(0, 10), textcoords="offset points", color=MUTED)
+    ax.set_title(unit, loc="left", fontsize=10, color=MUTED, pad=10)
     return fig, ax
+
+
+def label(ax, text, xy, color=MUTED, offset=(6, 0), **kw):
+    """A direct label next to a point, instead of a legend."""
+    ax.annotate(text, xy, xytext=offset, textcoords="offset points", va="center", color=color, **kw)
 
 
 def save(fig, path):

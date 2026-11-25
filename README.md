@@ -4,70 +4,55 @@ Tiny experiments in chess.
 
 ### [Where are chess games won and lost?](experiments/decided)
 
-Most games are lost to plain mistakes, but the clock's share of the points lost grows with rating,
-to 55% for 2400+ players over the board.
+Mostly to plain mistakes. But the higher the rating, the more the clock decides: over the board at
+2400+, it costs 55% of the points lost.
 
-[![The clock's share of decisive points lost grows with rating](experiments/decided/decided.svg)](experiments/decided)
+[![The clock's share of the points lost, by rating](experiments/decided/decided.svg)](experiments/decided)
 
 ### [Does more clock at move 20 go with better results?](experiments/clock)
 
-In classical chess, 10% more clock at move 20 goes with 1.1 more points per 100 games, and 2.0 for
-players who are habitually short of time.
+Yes, a little. 10% more clock at move 20 goes with about 1 point more per 100 classical games, and 2
+for players who are often short of time.
 
-[![Extra clock at move 20 goes with the most points when little is left](experiments/clock/clock.svg)](experiments/clock)
+[![Points per 100 games with 10% more clock, by clock left at move 20](experiments/clock/clock.svg)](experiments/clock)
 
 ### [Do textbook endgame rules hold under perfect play?](experiments/endgames)
 
-Mostly, but not at their edges: at sum 5 the rule of five says draw, yet 62% of the positions are
+Mostly, but not at the edges. The rule of five calls sum 5 a draw, yet 62% of those positions are
 wins.
 
-[![At sum 5 the rule of five says draw, yet 62% of positions are wins](experiments/endgames/endgames.svg)](experiments/endgames)
+[![White's win rate by the rule of five's sum](experiments/endgames/endgames.svg)](experiments/endgames)
 
 ### [Does thinking at the right moments make you better?](experiments/thinking)
 
-Players who spend their time where it matters most do not gain more rating the next year:
-+0.18 Elo per SD (95% CI −1.84 to +2.21).
+Not measurably. Players who spend their time on the right moves do not gain more rating the next
+year. Players who make fewer errors do.
 
-[![Time allocation does not predict rating change; errors do](experiments/thinking/thinking.svg)](experiments/thinking)
+[![Rating change next year, by time allocation and by errors](experiments/thinking/thinking.svg)](experiments/thinking)
 
 ### [Can statistics catch a chess cheater?](experiments/cheating)
 
-Honest players differ by 0.24 mistakes per game, so a cheater who removes fewer than 0.9 per game
-is flagged less than half the time.
+Only a heavy one. Honest players differ so much that a cheater who removes fewer than 0.9 mistakes a
+game is flagged less than half the time. And with enough games, most honest players look guilty.
 
-[![Search 10,000 games and 59% of honest players look like cheaters](experiments/cheating/cheating.svg)](experiments/cheating)
+[![Honest players whose best run looks like proof, by games played](experiments/cheating/cheating.svg)](experiments/cheating)
 
 ## Run it
 
-You need Linux on x86-64, [uv](https://docs.astral.sh/uv/), make, flock and a C compiler with OpenMP.
-
 ```sh
-make quick    # rebuild every chart from results/ (seconds)
-make data     # download the data into data/ (about 19 GB, once)
-make check    # check the shared code against known counts (about 7 min)
-make all      # rerun every experiment from the data (about 8 h on 12 cores, 1 GB more disk)
-make decided  # rerun one experiment: decided, clock, endgames, thinking or cheating
+make quick   # redraw the charts, in seconds
+make data    # download the data, about 19 GB
+make all     # rerun everything, about 8 hours
 ```
 
-## Layout
-
-```
-chesslab/       shared code: games, samples, tablebases, engine, charts, data download
-experiments/    one folder per experiment: README, code, results/ and the chart
-fathom/         Fathom, a Syzygy probing library in C (MIT license)
-data/           downloads and intermediate files (not in git)
-```
+It needs Linux, [uv](https://docs.astral.sh/uv/), make and a C compiler.
 
 ## Data
 
-- [Lichess open database](https://database.lichess.org): rated games of Oct 2026 (CC0).
-- [Lichess broadcasts](https://database.lichess.org): over-the-board games, Jul 2024 to
-  Oct 2026 (CC BY-SA 4.0).
-- [FIDE rating lists](https://ratings.fide.com), Jul 2023 to Nov 2026.
-- [Syzygy tablebases](https://tablebase.lichess.ovh/tables/standard): the WDL tables (win, draw,
-  loss) of all 3-5 piece endings and of 60 six-piece ones.
-- [Stockfish 19](https://stockfishchess.org) (GPL-3.0).
+Games from the [Lichess database](https://database.lichess.org), ratings from
+[FIDE](https://ratings.fide.com), endgames from the [Syzygy tables](https://tablebase.lichess.ovh)
+and analysis by [Stockfish](https://stockfishchess.org).
 
 ## License
 
-GPL-3.0-or-later. The files in `fathom/` keep their MIT license.
+GPL 3.0 or later. Fathom, in `fathom/`, is MIT.

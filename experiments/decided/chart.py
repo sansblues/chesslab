@@ -1,34 +1,35 @@
-"""Chart the decisive points lost by cause and rating band. Reads results/points_lost.csv; writes decided.svg."""
+"""Chart the clock's share of decisive points lost, by rating. Reads results/points_lost.csv; writes decided.svg."""
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
+from matplotlib.ticker import PercentFormatter
 
 from chesslab import plot
 
 HERE = Path(__file__).parent
-CAUSES = {"clock": ("clock", plot.BLUE), "opening_middlegame": ("opening and middlegame mistakes", plot.GREY),
-          "endgame": ("endgame mistakes", plot.DARK_GREY),
-          "resign_draw_other": ("resign, draw, other", plot.GREY + "80")}  # half-transparent: a lighter grey
+CAUSES = ["clock", "opening_middlegame", "endgame", "resign_draw_other"]
+
+
+def middle(band):
+    """The rating a band stands for: '<1200' -> 1050, '1200-1499' -> 1350, '2400+' -> 2550."""
+    if band.startswith("<"):
+        return int(band[1:]) - 150
+    if band.endswith("+"):
+        return int(band[:-1]) + 150
+    low, high = band.split("-")
+    return (int(low) + int(high) + 1) / 2
+
 
 lost = pd.read_csv(HERE / "results" / "points_lost.csv")
-lost[list(CAUSES)] *= 100
-online = lost.source == "online"
-x = np.where(online, np.arange(len(lost)), np.arange(len(lost)) + 1)  # a gap between the two groups
+lost["rating"] = lost.band.map(middle)
+lost["share"] = lost.clock / lost[CAUSES].sum(axis=1)
 
-fig, ax = plot.figure("The clock's share of decisive points lost grows with rating",
-                      "Points lost per 100 games a player plays. Clock: lost on time, or a mistake in time trouble")
-bottom = np.zeros(len(lost))
-for cause, (label, color) in CAUSES.items():
-    ax.bar(x, lost[cause], 0.6, bottom=bottom, color=color, label=label, edgecolor=plot.SURFACE, linewidth=0.5)
-    bottom += lost[cause]
-for xi, top, clock in zip(x, bottom, lost.clock):
-    ax.annotate(f"{clock / top:.0%}", (xi, top), xytext=(0, 3), textcoords="offset points", ha="center",
-                color=plot.BLUE, fontsize=8)
-ax.set_xticks(x, lost.band.str.replace("-", "–\n"), fontsize=8)
-for group, name in ((online, "Online (Lichess, all speeds)"), (~online, "Over the board (classical, FIDE rating)")):
-    ax.annotate(name, (x[group].mean(), 0), xycoords=("data", "axes fraction"), xytext=(0, -34),
-                textcoords="offset points", ha="center", color=plot.MUTED)
-ax.set_ylim(0, 40)
-ax.legend(loc="upper center", ncol=4, fontsize=8, handlelength=1, labelcolor=plot.MUTED)
+fig, ax = plot.figure("share of decisive points lost to the clock")
+for source, name, color in (("online", "online", plot.GREY), ("otb", "over the board", plot.BLUE)):
+    d = lost[lost.source == source]
+    ax.plot(d.rating, d.share, color=color, marker="o", markersize=4)
+    plot.label(ax, f"{name}", (d.rating.iloc[-1], d.share.iloc[-1]), color=color)
+ax.set(xlim=(950, 2900), ylim=(0, 0.6), xticks=[1200, 1600, 2000, 2400], yticks=[0, 0.2, 0.4, 0.6])
+ax.yaxis.set_major_formatter(PercentFormatter(1))
+ax.set_xlabel("rating")
 plot.save(fig, HERE / "decided.svg")
