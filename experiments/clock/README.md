@@ -1,13 +1,13 @@
 # Does more clock at move 20 go with better results?
 
-Yes, a little. In a 90+30 game, reaching move 20 with 11 more minutes goes with about +8 Elo. For
+Yes, a little. In classical chess, reaching move 20 with 10% more of your time goes with about +8 Elo. For
 players who are usually short of time by then, it goes with +14: they are the ones who end up in time
 trouble. Both numbers count the small cost of playing faster early. The data are observational, so
 these are comparisons within players, not proof.
 
 The less time is left, the more extra time goes with (before the cost of playing faster early):
 
-![Elo with 11 more minutes at move 20: +28 when 10% of the time is left, +5 at 60%](clock.svg)
+![Elo with 10% more time at move 20: +28 when 10% of the time is left, +5 at 60%](clock.svg)
 
 ## Findings
 

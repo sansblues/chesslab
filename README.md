@@ -11,8 +11,8 @@ Mostly to plain mistakes. But the higher the rating, the more the clock decides:
 
 ### [Does more clock at move 20 go with better results?](experiments/clock)
 
-Yes, a little. In a 90+30 game, reaching move 20 with 11 more minutes goes with about +8 Elo. For
-players who are usually short of time by then, it goes with +14.
+Yes, a little. In classical chess, reaching move 20 with 10% more of your time goes with about +8 Elo.
+For players who are usually short of time by then, it goes with +14.
 
 ### [Do textbook endgame rules hold under perfect play?](experiments/endgames)
 
