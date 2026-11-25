@@ -1,9 +1,9 @@
 # Does thinking at the right moments make you better?
 
-Not measurably. Players who spend their time where it matters most do not gain more rating in the
-next year: +0.18 Elo per SD of allocation quality (95% CI −1.84 to +2.21, 3,973 players). But the
-measure is mostly noise, so the test only excludes true effects larger than about 8 to 14 Elo a
-year.
+Not measurably. Players who spend their time where it matters most do not improve faster than others.
+Over the following year, their rating changed by +0.2 Elo per standard deviation of time allocation
+(95% CI −1.8 to +2.2, 3,973 players). The measure is noisy, so the test can only rule out effects
+larger than about 8 to 14 Elo a year.
 
 ## Findings
 
