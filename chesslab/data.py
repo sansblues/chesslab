@@ -76,8 +76,8 @@ def syzygy():
     for name, sha256 in sums.items():
         table, kind = name.split(".")
         pieces = len(table) - 1
-        if pieces <= 5 or (pieces == 6 and kind == "rtbw" and table in SYZYGY_6):
-            folder = f"{'3-4-5' if pieces <= 5 else '6'}-{'wdl' if kind == 'rtbw' else 'dtz'}"
+        if kind == "rtbw" and (pieces <= 5 or table in SYZYGY_6):  # WDL only: no experiment needs DTZ
+            folder = "3-4-5-wdl" if pieces <= 5 else "6-wdl"
             files.append(File(DATA / "syzygy" / name, f"{SYZYGY_URL}/{folder}/{name}", sha256=sha256))
     return files
 

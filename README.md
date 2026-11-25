@@ -64,8 +64,8 @@ data/           downloads and intermediate files (not in git)
 - [Lichess broadcasts](https://database.lichess.org): over-the-board games, Jul 2024 to
   Oct 2026 (CC BY-SA 4.0).
 - [FIDE rating lists](https://ratings.fide.com), Jul 2023 to Nov 2026.
-- [Syzygy tablebases](https://tablebase.lichess.ovh/tables/standard): all 3-5 piece tables and
-  60 six-piece tables.
+- [Syzygy tablebases](https://tablebase.lichess.ovh/tables/standard): the WDL tables (win, draw,
+  loss) of all 3-5 piece endings and of 60 six-piece ones.
 - [Stockfish 19](https://stockfishchess.org) (GPL-3.0).
 
 ## License
