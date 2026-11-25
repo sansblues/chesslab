@@ -43,10 +43,10 @@ def read_month(path):
         if game.headers.get("Variant", "Standard") not in ("Standard", "") or len(game.sans) < 20:
             continue
         clocks, evals = floats(game.clocks), floats(game.evals)
-        rows.append((game.key, dict(
-            white_fide=game.white_fide, black_fide=game.black_fide, white_elo=game.white_elo,
-            black_elo=game.black_elo, result=game.result, sans=" ".join(game.sans[:80]),
-            clocks=clocks[:80], evals=evals[:80]) if qualifies(game, clocks, evals) else None))
+        rows.append((game.key, {
+            "white_fide": game.white_fide, "black_fide": game.black_fide, "white_elo": game.white_elo,
+            "black_elo": game.black_elo, "result": game.result, "sans": " ".join(game.sans[:80]),
+            "clocks": clocks[:80], "evals": evals[:80]} if qualifies(game, clocks, evals) else None))
     return rows
 
 
@@ -84,8 +84,8 @@ def side_features(game, color):
     loss = np.maximum(0, win_chance(before[ok]) - win_chance(after[ok])) if ok.any() else np.array([np.nan])
     own = game.clocks[color:80:2]
     own = own[~np.isnan(own)]
-    return dict(mean_log_time=float(np.mean(np.log1p(t))), error=float(np.mean(loss)),
-                time_trouble=bool(len(own) and own.min() < 300))
+    return {"mean_log_time": float(np.mean(np.log1p(t))), "error": float(np.mean(loss)),
+                "time_trouble": bool(len(own) and own.min() < 300)}
 
 
 def positions(game, color):

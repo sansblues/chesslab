@@ -31,11 +31,15 @@ FIDE_LISTS = ["jul23", "jan24", "jul24", "oct24", "jan25", "apr25", "jul25", "oc
               "oct26", "nov26"]
 SYZYGY_URL = "https://tablebase.lichess.ovh/tables/standard"
 # The 60 six-piece WDL tables that hold most six-piece positions played in the Lichess and broadcast games.
-SYZYGY_6 = """KBPPPvK KBPPvKB KBPPvKN KBPPvKP KBPPvKR KBPvKBP KBPvKNP KBPvKPP KNPPPvK KNPPvKB KNPPvKN KNPPvKP
-    KNPPvKR KNPvKNP KNPvKPP KPPPPvK KPPPvKB KPPPvKN KPPPvKP KPPPvKQ KPPPvKR KPPvKPP KQBPPvK KQBPvKP KQNPPvK
-    KQNPvKP KQPPPvK KQPPvKP KQPPvKQ KQPPvKR KQPvKPP KQPvKQP KQPvKRP KQQBPvK KQQPPvK KQQPvKP KQRBPvK KQRPPvK
-    KQRPvKP KQRPvKR KRBPPvK KRBPvKP KRBPvKR KRBvKRP KRNPPvK KRNPvKR KRNvKRP KRPPPvK KRPPvKB KRPPvKN KRPPvKP
-    KRPPvKQ KRPPvKR KRPvKBP KRPvKNP KRPvKPP KRPvKRP KRRPPvK KRRPvKR KRRvKRP""".split()
+SYZYGY_6 = [
+    "KBPPPvK", "KBPPvKB", "KBPPvKN", "KBPPvKP", "KBPPvKR", "KBPvKBP", "KBPvKNP", "KBPvKPP", "KNPPPvK",
+    "KNPPvKB", "KNPPvKN", "KNPPvKP", "KNPPvKR", "KNPvKNP", "KNPvKPP", "KPPPPvK", "KPPPvKB", "KPPPvKN",
+    "KPPPvKP", "KPPPvKQ", "KPPPvKR", "KPPvKPP", "KQBPPvK", "KQBPvKP", "KQNPPvK", "KQNPvKP", "KQPPPvK",
+    "KQPPvKP", "KQPPvKQ", "KQPPvKR", "KQPvKPP", "KQPvKQP", "KQPvKRP", "KQQBPvK", "KQQPPvK", "KQQPvKP",
+    "KQRBPvK", "KQRPPvK", "KQRPvKP", "KQRPvKR", "KRBPPvK", "KRBPvKP", "KRBPvKR", "KRBvKRP", "KRNPPvK",
+    "KRNPvKR", "KRNvKRP", "KRPPPvK", "KRPPvKB", "KRPPvKN", "KRPPvKP", "KRPPvKQ", "KRPPvKR", "KRPvKBP",
+    "KRPvKNP", "KRPvKPP", "KRPvKRP", "KRRPPvK", "KRRPvKR", "KRRvKRP",
+]
 STOCKFISH_URL = "https://github.com/official-stockfish/Stockfish/releases/download/sf_19"
 STOCKFISH_TAR = "stockfish-linux-x86-64-universal.tar.gz"
 STOCKFISH_SHA256 = "9defc0d4e55d49c65a6d042f3e571a39fcea499ade6dbe741b53b8c65e03611f"

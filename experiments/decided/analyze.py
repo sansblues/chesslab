@@ -81,7 +81,8 @@ def decide(p):
     error = ~offboard & (d.side * d.after < d.side * d.before)
     out["kind"] = np.select([offboard, d.before.isna(), error], ["offboard", "never", "error"], "noise")
     out["loser"] = np.select([offboard, error], [np.where(last.final < last.after, 1, -1), d.side], 0)
-    out["points"] = np.select([offboard, error], [(last.final - last.after).abs(), (last.final - d.before).abs()], 0) / 2
+    lost = [(last.final - last.after).abs(), (last.final - d.before).abs()]
+    out["points"] = np.select([offboard, error], lost, 0) / 2
     out["cause"] = np.select(
         [offboard & (last.end == "flag"), offboard, d.clock < 0.1, (d.pieces <= 6) | (d.material <= 26)],
         ["clock", "resign_draw_other", "clock", "endgame"], "opening_middlegame")
@@ -154,7 +155,8 @@ def main():
     write(points_lost(g, d), "points_lost.csv")
 
     rows = []  # by speed: shares of the sample; online, all speeds: weighted as in points_lost.csv
-    for (source, speed), x in itertools.chain(d.groupby(["source", "speed"]), [(("online", "all"), d[d.source == "online"])]):
+    online = [(("online", "all"), d[d.source == "online"])]
+    for (source, speed), x in itertools.chain(d.groupby(["source", "speed"]), online):
         w = x.weight if speed == "all" else None
         rows.append({"source": source, "speed": speed, "games": len(x),
                      "offboard": np.average(x.kind == "offboard", weights=w),

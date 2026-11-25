@@ -35,7 +35,7 @@ def standardize(s):
 
 def coefficient(model, term):
     low, high = model.conf_int().loc[term]
-    return dict(estimate=model.params[term], low=low, high=high, p=model.pvalues[term])
+    return {"estimate": model.params[term], "low": low, "high": high, "p": model.pvalues[term]}
 
 
 def save(table, name):
@@ -103,8 +103,8 @@ def rating_change(P, X):
     rows = []
     for measure, term in (("allocation_quality", "z_aq"), ("error", "z_error")):
         c = coefficient(model, term)
-        rows.append(dict(measure=measure, elo_per_sd=c["estimate"], elo_per_sd_low=c["low"], elo_per_sd_high=c["high"],
-                         p=c["p"], players=int(model.nobs)))
+        rows.append({"measure": measure, "elo_per_sd": c["estimate"], "elo_per_sd_low": c["low"],
+                     "elo_per_sd_high": c["high"], "p": c["p"], "players": int(model.nobs)})
     rows[0]["permutation_p"] = np.mean(np.abs(null) >= abs(rows[0]["elo_per_sd"]))
     save(rows, "rating_change")
     return model
@@ -117,15 +117,15 @@ def reliability(halves, high):
     for measure in ("allocation_quality", "mean_log_time", "time_variability"):
         a, b = halves[measure][0], halves[measure][1]
         r = a.corr(b)
-        rows.append(dict(measure=measure, split_half=r, spearman_brown=spearman_brown(r),
-                         games_for_0_7=3 * 0.7 * (1 - r) / (0.3 * r)))  # Spearman-Brown, from 3 games
+        rows.append({"measure": measure, "split_half": r, "spearman_brown": spearman_brown(r),
+                         "games_for_0_7": 3 * 0.7 * (1 - r) / (0.3 * r)})  # Spearman-Brown, from 3 games
     ok = halves.allocation_quality.notna().all(axis=1)
     a, b = halves.allocation_quality[0][ok].values, halves.allocation_quality[1][ok].values
     rng = np.random.default_rng(1)
     boot = [np.corrcoef(a[i], b[i])[0, 1] for i in (rng.integers(0, len(a), len(a)) for _ in range(1000))]
     rows[0]["split_half_low"], rows[0]["split_half_high"] = np.percentile(boot, [2.5, 97.5])
     save(rows, "reliability")
-    bound = [dict(reliability=case, spearman_brown=spearman_brown(r)) for case, r in
+    bound = [{"reliability": case, "spearman_brown": spearman_brown(r)} for case, r in
              (("estimate", rows[0]["split_half"]), ("ci_low", rows[0]["split_half_low"]))]
     save([dict(b, elo_per_true_sd_max=high / np.sqrt(b["spearman_brown"])) for b in bound], "effect_bound")
 
@@ -139,8 +139,8 @@ def by_decile(model):
         others = exog.drop(columns=term).values
         x, y = (v - others @ np.linalg.lstsq(others, v, rcond=None)[0] for v in (exog[term].values, model.model.endog))
         for decile, d in pd.DataFrame({"x": x, "y": y}).groupby(pd.qcut(x, 10, labels=False) + 1):
-            rows.append(dict(measure=measure, decile=decile, players=len(d), measure_sd=d.x.mean(),
-                             rating_change=d.y.mean()))
+            rows.append({"measure": measure, "decile": decile, "players": len(d), "measure_sd": d.x.mean(),
+                             "rating_change": d.y.mean()})
     save(rows, "rating_change_by_decile")
 
 
@@ -159,8 +159,8 @@ def within_game(P, G):
     model = smf.ols("over_within ~ z_aq_within + mean_log_time_within + mean_voc_within", S).fit(
         cov_type="cluster", cov_kwds={"groups": S.fide_id})
     c = coefficient(model, "z_aq_within")
-    save([dict(games=len(S), score_per_sd=c["estimate"], score_per_sd_low=c["low"], score_per_sd_high=c["high"],
-               p=c["p"])], "within_game")
+    save([{"games": len(S), "score_per_sd": c["estimate"], "score_per_sd_low": c["low"], "score_per_sd_high": c["high"],
+               "p": c["p"]}], "within_game")
 
 
 def critical_moves(P):
@@ -189,17 +189,17 @@ def main():
     G = pd.read_parquet(DATA / "thinking" / "game_sides.parquet")
     G["over"] = G.score - 1 / (1 + 10 ** ((G.opponent_elo - G.elo) / 400))
     X, halves = players(P, G)
-    save([dict(eligible_players=G.fide_id.nunique(), players=P.fide_id.nunique(),
-               game_sides=len(P.groupby(["fide_id", "game"])), positions_analysed=analysed, positions=len(P),
-               model_players=len(X))], "sample")
+    save([{"eligible_players": G.fide_id.nunique(), "players": P.fide_id.nunique(),
+               "game_sides": len(P.groupby(["fide_id", "game"])), "positions_analysed": analysed, "positions": len(P),
+               "model_players": len(X)}], "sample")
     model = rating_change(P, X)
     reliability(halves, coefficient(model, "z_aq")["high"])
     by_decile(model)
     within_game(P, G)
     critical_moves(P)
     rho = P[["voc", "voc8", "error"]].corr("spearman")
-    save([dict(proxy="voc_depth8", spearman=rho.at["voc", "voc8"]),
-          dict(proxy="error", spearman=rho.at["voc", "error"])], "voc_agreement")
+    save([{"proxy": "voc_depth8", "spearman": rho.at["voc", "voc8"]},
+          {"proxy": "error", "spearman": rho.at["voc", "error"]}], "voc_agreement")
     P["band"] = pd.cut(P.elo, [0, 1600, 1800, 2000, 2200, 2400, 3000],
                        labels=["<=1600", "1601-1800", "1801-2000", "2001-2200", "2201-2400", ">2400"])
     bands = P.groupby("band", observed=True).size().rename("positions").to_frame()

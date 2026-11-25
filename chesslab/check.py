@@ -76,8 +76,10 @@ def fathom():
     disagree = sum(tablebase.fathom_wdl(b) != tablebase.syzygy().probe_wdl(b) for b in boards)
     report("Fathom vs python-chess: KRPPvKR disagreements", 0, disagree)
     codes = tablebase.enumerate_wdl("KPvK")  # published: syzygy-tables.info
-    report("Fathom KPvK, White to move: draws, wins", (19_184, 62_480), (int((codes[0] == 2).sum()), int((codes[0] == 4).sum())))
-    report("Fathom KPvK, Black to move: losses, draws", (48_802, 35_210), (int((codes[1] == 0).sum()), int((codes[1] == 2).sum())))
+    report("Fathom KPvK, White to move: draws, wins", (19_184, 62_480),
+           (int((codes[0] == 2).sum()), int((codes[0] == 4).sum())))
+    report("Fathom KPvK, Black to move: losses, draws", (48_802, 35_210),
+           (int((codes[1] == 0).sum()), int((codes[1] == 2).sum())))
 
 
 def stockfish():
