@@ -1,0 +1,5 @@
+source,speed,situation,moves,blunders,ratio
+online,blitz,after_opponent,471909,141893,2.12688
+otb,classical,after_opponent,644848,119802,3.384
+online,blitz,after_own,664274,122730,1.84571
+otb,classical,after_own,783346,69117,2.71294

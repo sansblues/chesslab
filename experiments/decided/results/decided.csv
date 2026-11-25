@@ -1,0 +1,7 @@
+source,speed,games,offboard,tablebase
+online,blitz,143849,0.113779,0.0138409
+online,bullet,64668,0.274371,0.00473186
+online,classical,6262,0.0550942,0.0148515
+online,rapid,101783,0.0647652,0.0158278
+otb,classical,427382,0.0407364,0.00997936
+online,all,316562,0.173843,0.0150957
