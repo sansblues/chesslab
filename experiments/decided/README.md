@@ -17,9 +17,9 @@ below 1800 to 55% at 2400+.
 - After an opponent's blunder, the reply is itself a blunder 2.13× as often as usual in online
   blitz and 3.38× in over-the-board classical. After a player's own blunder, if the opponent's
   reply is not one, their next move is a blunder 1.32× as often (online blitz).
-- An opponent's blunder goes unpunished on the next move in 39% of online blitz games below 1200
-  and 28% at 2400+ (within three moves: 58% and 44%); over the board, 27% below 1800 and 16% at
-  2400+.
+- An opponent's blunder goes unpunished on the next move 39% of the time in online blitz below
+  1200 and 28% at 2400+ (within three moves: 58% and 44%); over the board, 27% below 1800 and 16%
+  at 2400+.
 - Online, 4.0% of blitz resignations come in positions that are not lost by the recorded eval. A
   deeper search agrees for 126 of 150 such resignations (all speeds). In
   [wFxi2JL6](https://lichess.org/game/wFxi2JL6) a 1912 player resigned a rook endgame that is a
