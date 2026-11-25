@@ -1,64 +1,55 @@
 # Where are chess games lost?
 
-Mostly by plain mistakes in the opening and middlegame. But the clock's share of the points lost
-grows with rating: online from 25% below 1200 to 38% at 2100–2399, and over the board from 22%
-below 1800 to 55% at 2400+.
+Mostly to plain mistakes in the opening and middlegame. But the clock matters more as players get
+stronger. Online, it costs 25% of the points lost below 1200, and 38% at 2100–2399. Over the board,
+it costs 22% below 1800, and 55% at 2400+.
 
 ![The clock's share of the points lost: online and over the board, by rating](decided.svg)
 
-## Findings
+## How it works
 
-- Stronger players lose fewer points to mistakes, but about as many or more to the clock.
-- Endgames with six pieces or fewer decide 1.5% of online games and 1.0% of over-the-board
-  classical games.
-- In 11.4% of online blitz games the result does not follow from the final position: a player
-  resigns or loses on time in a position that is not lost, or the game is drawn in a won position
-  (bullet 27.4%, rapid 6.5%, over-the-board classical 4.1%).
-- After an opponent's blunder, the reply is itself a blunder 2.13× as often as usual in online
-  blitz and 3.38× in over-the-board classical. After a player's own blunder, if the opponent's
-  reply is not one, their next move is a blunder 1.32× as often (online blitz).
-- An opponent's blunder goes unpunished on the next move 39% of the time in online blitz below
-  1200 and 28% at 2400+ (within three moves: 58% and 44%); over the board, 27% below 1800 and 16%
-  at 2400+.
-- Online, 4.0% of blitz resignations come in positions that are not lost by the recorded eval. A
-  deeper search agrees for 126 of 150 such resignations (all speeds). In
-  [wFxi2JL6](https://lichess.org/game/wFxi2JL6) a 1912 player resigned a rook endgame that is a
-  tablebase draw, with 128 s left.
+1. We take 316,562 online games from Lichess (October 2026) and 427,382 classical over-the-board
+   games relayed on Lichess (July 2024 to October 2026). Almost every move has an engine
+   evaluation.
+2. After every move, we call the position won, drawn or lost. Won means the engine gives a side
+   3 pawns or more. With six pieces or fewer, we use the perfect answer of the endgame tables.
+3. We find the move that decided the game: the last move after which the position matches the
+   final result. If the final position does not match the result, the game was decided off the
+   board: a player resigned or lost on time in a position that was not lost, or agreed a draw while
+   winning.
+4. We charge the lost points to the player who made that move, and sort them by cause: the clock (a
+   loss on time, or a deciding mistake with less than 10% of the time left), an endgame mistake, or
+   an opening or middlegame mistake.
+5. We add it all up per 100 games, by rating.
 
-## Reproduce
+## What we found
 
-    make data            # once, from the repo root
-    make decided         # about 35 min, one heavy job
-    make -C experiments/decided quick   # the chart from results/, seconds
+- Stronger players make fewer deciding mistakes, but lose as many points or more to the clock.
+- Endgames with six pieces or fewer decide only 1.5% of online games and 1% of over-the-board
+  games.
+- 11% of online blitz games are decided off the board. In bullet it is 27%, in rapid 7%, and over
+  the board 4%.
+- A blunder invites another. Right after an opponent's blunder, a player blunders 2.1 times as
+  often as usual online, and 3.4 times as often over the board. After their own blunder, if the
+  opponent does not blunder back, 1.3 times.
+- Gifts often go unpunished. Online below 1200, 39% of blunders are not punished on the next move
+  (58% within three moves). At 2400+, 28% (44%). Over the board, 27% below 1800 and 16% at 2400+.
+- Some players resign too early: 4% of online blitz resignations come in positions that are not
+  lost. In [one game](https://lichess.org/game/wFxi2JL6), a 1912 player resigned a drawn rook
+  endgame with two minutes left.
 
-## Method
+## What to keep in mind
 
-- Data: the 316,562 games of the Lichess sample (Oct 2026) with an eval on at least 95% of
-  plies, and the 427,382 over-the-board classical broadcast games with evals (Jul 2024 – Oct 2026).
-- Each position is won, drawn or lost for White: eval ≥ +3 or ≤ −3 pawns, or the Syzygy value
-  at six pieces or fewer. A missing eval keeps the previous class.
-- The deciding moment is the last move after which the class equals the result and stays so.
-  If the final position's class is not the result, the game was decided off the board
-  (resignation, loss on time, draw). The side whose result is below the position's value loses
-  the difference, in half-points.
-- Causes: clock = a loss on time in a position not lost, or a deciding mistake with less than 10%
-  of base + 40 × increment left; endgame = six pieces or fewer, or at most 26 pawns of non-pawn
-  material on the board.
-- Online figures over all speeds are post-stratified to the whole Lichess sample (cells: speed ×
-  average rating band × how the game ended × length); figures by speed are shares of the sample.
-- Blunder: the mover's winning chances (Lichess formula, −1..1, eval clipped to ±10 pawns) fall
-  by 0.3 or more. Ratios are observed / expected blunders, the expectation from all moves of the
-  same population, rating band, winning-chance bin, clock bin and phase.
-- Not punished: the reply gives back more than half of what the blunder gained (within 3 moves:
-  at any of the next three own moves).
-- Re-check: 150 of the non-lost online resignations (all speeds, not in the tablebases; first by MD5
-  of the game URL), Stockfish 19 at 3 M nodes.
+- These are counts, not experiments. They show where points are lost, not how to fix it.
+- Online, only games that someone asked Lichess to analyse have evaluations. We reweight them to
+  match all games.
+- The evaluations stored with the games are quick ones. A deeper check confirmed 126 of 150
+  "not lost" resignations.
+- Broadcasts miss most games of weaker events.
 
-## Limits
+## Run it
 
-- Lichess has evals only for games that someone asked it to analyse. Weighting corrects only for
-  the cell variables.
-- The recorded eval of a final position is shallow: the re-check keeps 126 of 150 non-lost
-  resignations.
-- Broadcast games miss most games of weaker events, and some relays lack clocks.
-- A player's rating band comes from their rating in the game header (Lichess or FIDE).
+    make data       # once, about 19 GB
+    make decided    # about 35 minutes
+
+The code holds the exact definitions.

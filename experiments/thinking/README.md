@@ -1,63 +1,48 @@
 # Does thinking at the right moments make you better?
 
-Not measurably. Over a year, players who spend their time on the right moves gain no more rating than
-others: their rating changed by +0.2 Elo per standard deviation of time allocation
-(95% CI −1.8 to +2.2, 3,973 players). The measure is noisy, so the test can only rule out effects
-larger than about 8 to 14 Elo a year.
+Not measurably. Over a year, players who spend their time on the right moves gain no more rating
+than others.
 
-## Findings
+## How it works
 
-- The analysis plan was written before any outcome was computed ([PLAN.md](PLAN.md)). The
-  positive control works: the error in a player's games predicts rating change
-  (−12.1 Elo per SD, p < 1e−10).
-- Split-half reliability of allocation quality (3 games against 3): 0.041 (95% CI 0.013 to
-  0.073), against 0.45 for the mean think time and 0.53 for its variability. A reliability of 0.7 would need about 162 games a player.
-- On average, stronger players do allocate better: the correlation of think time with the value
-  of thinking rises from 0.115 (rating ≤ 1600) to 0.165 (> 2400), as Russek et al. (Cognitive
-  Science, 2025) found.
-- Within a player, games with better allocation score better: +0.013 points per SD
-  (95% CI 0.007 to 0.019, 17,164 games). This is an association only.
-- A low clock goes with more error, most of all where the value of thinking is high: with less
-  than 10 min left, the error is 0.46 win-% points higher, and 0.99 points more (95% CI 0.86 to
-  1.12) in critical positions (top 20%), about 3 times as much. But critical moves played fast
-  (< 30 s) hold only 4.8% of all error, and they lose less than critical moves played slowly
-  (2.87 against 3.52 win-% points).
+1. We take 4,000 FIDE-rated players from classical over-the-board games relayed on Lichess between
+   July 2024 and June 2025, with up to 6 games each.
+2. For each of their moves, an engine measures how much thinking was worth there: how much better
+   the best move is than the move a quick look finds.
+3. We compare that with how long the player thought. A player who thinks long when it matters, and
+   moves fast when it does not, gets a high score.
+4. We check whether players with a high score gained more FIDE rating over the next year (July 2025
+   to July 2026) than others of the same rating, age and accuracy.
 
-## Reproduce
+We wrote this plan down before we computed any result: [PLAN.md](PLAN.md).
 
-    make data            # once, from the repo root
-    make thinking        # about 3 h, one heavy job (Stockfish takes 2.5 h on 12 cores)
+## What we found
 
-`engine.py` skips positions already in `data/thinking/stockfish/`, so a stopped run resumes.
+- No link: +0.2 Elo a year per standard deviation of the score, with a 95% range of −1.8 to +2.2.
+  The test itself works: players with fewer errors did gain rating, about 12 Elo a year per
+  standard deviation.
+- The score is mostly noise. A player's score in three games hardly predicts it in three other
+  games (correlation 0.04). A reliable score would need about 160 games per player. So the test can
+  only rule out effects bigger than about 8 to 14 Elo a year.
+- Stronger players do spend their time a bit better on average, as
+  [Russek et al. (2025)](https://pmc.ncbi.nlm.nih.gov/articles/PMC12553403) found.
+- Within a player, games where they spent their time well went a little better. But a good game may
+  also change how a player uses their time.
+- Playing a critical move too fast is rarely the problem. Such moves hold only 5% of all lost value,
+  and they are slightly better than slow critical moves. Most mistakes in critical positions come
+  after thinking.
+- Low on time, mistakes grow about three times more in critical positions than in quiet ones.
 
-## Method
+## What to keep in mind
 
-- Data: classical over-the-board games relayed on Lichess in the baseline year (Jul 2024 to
-  Jun 2025), with clocks to the second and engine evals on at least 90% of the plies; FIDE standard
-  lists of Jul 2024, Jul 2025 and Jul 2026.
-- Players: 8,224 with a FIDE ID, at least 10 such games and a rating in the Jul 2025 and Jul 2026
-  lists. Analysed: 4,000 of them at random, up to 6 random games each: 635,837 positions, 501,336 of them
-  not decided (|eval| ≤ 300 cp). These two cuts, made for compute, were logged before any outcome.
-- Positions: the player's moves 9 to 40 with more than one legal move. Think time = clock before −
-  clock after + increment.
-- Value of thinking (VOC): the win probability of the best move minus that of the move a depth-4
-  search prefers, both scored by a 30,000-node search (Stockfish 19); a depth-4 move outside that
-  search's top two is scored by a 7,500-node search restricted to the shallow moves. Win
-  probability: the Lichess formula, eval clipped to ±1000 cp.
-- Allocation quality (AQ): the Spearman correlation of VOC with log(1 + think time), taken relative
-  to the player's mean in that game, over the player's positions.
-- Model: OLS with HC3 errors. Rating change (Jul 2025 to Jul 2026) on AQ, with rating, rating²,
-  age (linear spline), K-factor, sex, error (mean win-probability loss), score above expectation,
-  number of games, mean think time, time-trouble rate and the rating change of the year before.
-  Permutation null (think times shuffled within each game, 200 times): p = 0.875.
-- Reliability: AQ from odd against even games (3 against 3), bootstrap CI. The bound is the upper
-  CI limit divided by the square root of the Spearman-Brown reliability.
+- The engine's measure of "worth thinking" is rough: two versions of it agree only weakly.
+- Only 6 games per player were analysed.
+- A fast move in a critical position may be a prepared opening move.
+- Broadcasts favour strong events, and relayed clocks are sometimes wrong.
 
-## Limits
+## Run it
 
-- VOC is a noisy proxy: the depth-4 and depth-8 versions agree only weakly (Spearman 0.336).
-- Only 6 games a player were analysed; true effects up to about 8 Elo per SD a year (14 at the
-  low end of the reliability CI) remain possible.
-- A game that goes well can change how a player uses time: the within-game link need not be causal.
-- Fast moves in critical positions can be prepared opening lines, not careless play.
-- Broadcasts over-represent strong events, and relayed clocks are sometimes wrong.
+    make data       # once, about 19 GB
+    make thinking   # about 3 hours, most of it engine analysis
+
+The code holds the exact definitions.
