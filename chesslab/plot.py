@@ -1,39 +1,47 @@
-"""Chart style: blue for what matters, grey for the rest, as few words as possible."""
-import matplotlib
+"""Charts as plain SVG: the data and the few numbers that matter, nothing else."""
+from dataclasses import dataclass, field
+from math import log10
 
-matplotlib.use("svg")
-import matplotlib.pyplot as plt
-
-BLUE = "#2a78d6"
-GREY = "#b4b2a9"
-INK = "#2b2b2b"
-MUTED = "#6b6a66"
-SURFACE = "#fcfcfb"
-
-plt.rcParams.update({
-    "figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "savefig.facecolor": SURFACE,
-    "font.family": "sans-serif", "font.sans-serif": ["Helvetica", "Arial", "DejaVu Sans"], "font.size": 10,
-    "text.color": INK, "axes.labelcolor": MUTED, "xtick.color": MUTED, "ytick.color": MUTED,
-    "axes.edgecolor": "#d6d5ce", "axes.linewidth": 0.8, "axes.grid": False,
-    "axes.spines.top": False, "axes.spines.right": False, "axes.spines.left": False,
-    "xtick.major.size": 0, "ytick.major.size": 0, "lines.linewidth": 2, "svg.fonttype": "none",
-    "svg.hashsalt": "chesslab",
-})
+BLUE = "#2f81f7"
+GREY = "#8c959f"  # both colours read on light and dark pages
+FONT = "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
 
 
-def figure(unit: str, size=(6.4, 3.2)):
-    """A figure with one axes; the unit of the y-axis sits above it, where it is read first."""
-    fig, ax = plt.subplots(figsize=size, layout="constrained")
-    ax.set_title(unit, loc="left", fontsize=10, color=MUTED, pad=10)
-    return fig, ax
+@dataclass
+class Line:
+    points: list[tuple[float, float]]
+    color: str = BLUE
+    labels: list[tuple[int, str, str]] = field(default_factory=list)  # (point index, text, "end" | "above" | "below")
 
 
-def label(ax, text, xy, color=MUTED, offset=(6, 0), **kw):
-    """A direct label next to a point, instead of a legend."""
-    ax.annotate(text, xy, xytext=offset, textcoords="offset points", va="center", color=color, **kw)
+def save(path, lines, ticks, ymax, xlog=False, width=640, height=180):
+    """Draw lines over a shared x-axis that shows only its tick labels."""
+    left, right, top, bottom = 40, 150, 28, 32
+    xs = [x for line in lines for x, _ in line.points] + [x for x, _ in ticks]
+    scale = log10 if xlog else float
+    x0, x1 = scale(min(xs)), scale(max(xs))
 
+    def at(x, y):
+        return (left + (scale(x) - x0) / (x1 - x0) * (width - left - right),
+                height - bottom - y / ymax * (height - top - bottom))
 
-def save(fig, path):
-    """Write the chart as an SVG file that is the same on every run."""
-    fig.savefig(path, format="svg", metadata={"Date": None})
-    plt.close(fig)
+    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" '
+           f'height="{height}" font-family="{FONT}" font-size="13">')
+    out = [svg]
+    for line in lines:
+        points = " ".join(f"{px:.1f},{py:.1f}" for px, py in (at(x, y) for x, y in line.points))
+        out.append(f'<polyline points="{points}" fill="none" stroke="{line.color}" stroke-width="2" '
+                   'stroke-linejoin="round" stroke-linecap="round"/>')
+        for index, text, side in line.labels:
+            px, py = at(*line.points[index])
+            out.append(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="3" fill="{line.color}"/>')
+            tx, ty, anchor = {"end": (px + 8, py + 4, "start"), "above": (px, py - 10, "middle"),
+                              "below": (px, py + 20, "middle")}[side]
+            if side != "end" and px < 100:  # near the left edge, a label starts at its point
+                tx, anchor = px - 4, "start"
+            out.append(f'<text x="{tx:.1f}" y="{ty:.1f}" text-anchor="{anchor}" fill="{line.color}">{text}</text>')
+    for x, text in ticks:
+        out.append(f'<text x="{at(x, 0)[0]:.1f}" y="{height - 8}" text-anchor="middle" font-size="12" '
+                   f'fill="{GREY}">{text}</text>')
+    out.append("</svg>\n")
+    path.write_text("\n".join(out))

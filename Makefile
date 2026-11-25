@@ -12,7 +12,7 @@ export HEAVY PY
 .PHONY: quick all data check $(EXPERIMENTS)
 
 quick:
-	for e in $(EXPERIMENTS); do $(MAKE) -C experiments/$$e quick || exit 1; done
+	for f in experiments/*/chart.py; do $(PY) $$f || exit 1; done
 
 all: data build/fathom.so $(EXPERIMENTS)
 

@@ -4,7 +4,7 @@ Only a heavy one. Honest players of the same rating differ by 0.24 mistakes per 
 who removes fewer than about 0.9 mistakes per game is flagged less than half the time by a test
 that wrongly flags 1 honest player in 10,000, however many games they play.
 
-![Search 10,000 games and 59% of honest players have a 5-game run that looks like 1-in-10,000 evidence](cheating.svg)
+![Honest players whose best 5-game run looks like 1-in-10,000 proof: 9% at 1,000 games, 59% at 10,000](cheating.svg)
 
 ## Findings
 

@@ -7,7 +7,7 @@ Tiny experiments in chess.
 Mostly to plain mistakes. But the higher the rating, the more the clock decides: over the board at
 2400+, it costs 55% of the points lost.
 
-[![The clock's share of the points lost, by rating](experiments/decided/decided.svg)](experiments/decided)
+[![The clock's share of the points lost: online and over the board, by rating](experiments/decided/decided.svg)](experiments/decided)
 
 ### [Does more clock at move 20 go with better results?](experiments/clock)
 
@@ -21,14 +21,14 @@ for players who are often short of time.
 Mostly, but not at the edges. The rule of five calls sum 5 a draw, yet 62% of those positions are
 wins.
 
-[![White's win rate by the rule of five's sum](experiments/endgames/endgames.svg)](experiments/endgames)
+| rule of five | 3 | 4 | 5 | 6 | 7+ |
+| --- | --- | --- | --- | --- | --- |
+| White wins | 9% | 23% | **62%** | 96% | 100% |
 
 ### [Does thinking at the right moments make you better?](experiments/thinking)
 
 Not measurably. Players who spend their time on the right moves do not gain more rating the next
 year. Players who make fewer errors do.
-
-[![Rating change next year, by time allocation and by errors](experiments/thinking/thinking.svg)](experiments/thinking)
 
 ### [Can statistics catch a chess cheater?](experiments/cheating)
 

@@ -4,7 +4,9 @@ Mostly, but they fail at their edges. At sum 5 the rule of five says draw, yet 6
 positions are wins. Philidor's defence, followed literally, loses the textbook position. And two
 rook pawns win 97.5% of quiet positions with White to move: they are not "often a draw".
 
-![At sum 5 the rule of five says draw, yet 62% of positions are wins](endgames.svg)
+| rule of five | 3 | 4 | 5 | 6 | 7+ |
+| --- | --- | --- | --- | --- | --- |
+| White wins | 9% | 23% | **62%** | 96% | 100% |
 
 ## Findings
 
@@ -41,7 +43,6 @@ rook pawns win 97.5% of quiet positions with White to move: they are not "often 
 
     make data            # once, from the repo root
     make endgames        # about 50 min, one heavy job
-    make -C experiments/endgames quick   # the chart from results/, seconds
 
 ## Try the checker
 

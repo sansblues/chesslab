@@ -4,7 +4,7 @@ Mostly by plain mistakes in the opening and middlegame. But the clock's share of
 grows with rating: online from 25% below 1200 to 38% at 2100–2399, and over the board from 22%
 below 1800 to 55% at 2400+.
 
-![The clock's share of decisive points lost grows with rating](decided.svg)
+![The clock's share of the points lost: online and over the board, by rating](decided.svg)
 
 ## Findings
 

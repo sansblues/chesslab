@@ -5,8 +5,6 @@ next year: +0.18 Elo per SD of allocation quality (95% CI −1.84 to +2.21, 3,97
 measure is mostly noise, so the test only excludes true effects larger than about 8 to 14 Elo a
 year.
 
-![Time allocation does not predict rating change; errors do](thinking.svg)
-
 ## Findings
 
 - The analysis plan was written before any outcome was computed ([PLAN.md](PLAN.md)). The
@@ -29,7 +27,6 @@ year.
 
     make data            # once, from the repo root
     make thinking        # about 3 h, one heavy job (Stockfish takes 2.5 h on 12 cores)
-    make -C experiments/thinking quick   # the chart from results/, seconds
 
 `engine.py` skips positions already in `data/thinking/stockfish/`, so a stopped run resumes.
 
