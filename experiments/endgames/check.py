@@ -17,10 +17,11 @@ from collections import defaultdict
 from pathlib import Path
 
 import chess
-import endgame
 import numpy as np
 
 from chesslab import tablebase
+
+import endgame
 
 EXAMPLES = 2
 

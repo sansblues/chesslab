@@ -11,9 +11,10 @@ from typing import NamedTuple
 import chess
 import numpy as np
 import pandas as pd
-from endgame import distance, file, rank
 
 from chesslab import tablebase
+
+from endgame import distance, file, rank
 
 DEPTHS = range(41)
 

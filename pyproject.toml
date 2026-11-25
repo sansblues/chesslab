@@ -25,3 +25,9 @@ packages = ["chesslab"]
 
 [tool.ruff]
 line-length = 120
+
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+known-local-folder = ["endgame"]

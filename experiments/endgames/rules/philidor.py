@@ -5,6 +5,7 @@ rook and pawn:
 - once the pawn reaches the 6th rank, check the king from behind, or take the rook to the 1st rank.
 Ties go to the square farthest from the white king. START is the textbook position."""
 import chess
+
 from endgame import distance, file, rank
 
 MATERIAL = "KRPvKR"

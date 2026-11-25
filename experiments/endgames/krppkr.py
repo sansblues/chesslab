@@ -8,12 +8,13 @@ from multiprocessing import Pool
 from pathlib import Path
 
 import chess
-import endgame
 import numpy as np
 import pandas as pd
-from endgame import distance, file, rank
 
 from chesslab import DATA, samples, tablebase
+
+import endgame
+from endgame import distance, file, rank
 
 HERE = Path(__file__).parent
 CACHE = DATA / "endgames"
