@@ -8,7 +8,8 @@ from chesslab import plot
 
 HERE = Path(__file__).parent
 CAUSES = {"clock": ("clock", plot.BLUE), "opening_middlegame": ("opening and middlegame mistakes", plot.GREY),
-          "endgame": ("endgame mistakes", plot.DARK_GREY), "resign_draw_other": ("resign, draw, other", plot.GREY)}
+          "endgame": ("endgame mistakes", plot.DARK_GREY),
+          "resign_draw_other": ("resign, draw, other", plot.GREY + "80")}  # half-transparent: a lighter grey
 
 lost = pd.read_csv(HERE / "results" / "points_lost.csv")
 lost[list(CAUSES)] *= 100
