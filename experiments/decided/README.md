@@ -1,28 +1,29 @@
 # Where are chess games won and lost?
 
-Mostly by mistakes in the opening and middlegame, but the clock's share grows with rating: online
-from 25% of decisive points lost below 1200 to 38% at 2100–2399, over the board from 45% at
-2000–2199 to 55% at 2400+.
+Mostly by plain mistakes in the opening and middlegame. But the clock's share of the points lost
+grows with rating: online from 25% below 1200 to 38% at 2100–2399, and over the board from 22%
+below 1800 to 55% at 2400+.
 
 ![The clock's share of decisive points lost grows with rating](decided.svg)
 
-Stronger players lose far fewer points to opening and middlegame mistakes, but about as many or
-more to the clock. The evals are Lichess's own, and the online games with evals are
-self-selected; see Limits.
+## Findings
 
+- Stronger players lose fewer points to mistakes, but about as many or more to the clock.
 - Endgames with six pieces or fewer decide 1.5% of online games and 1.0% of over-the-board
   classical games.
-- Off-board decisions settle 11.4% of online blitz games (bullet 27.4%, rapid 6.5%,
-  over-the-board classical 4.1%).
+- In 11.4% of online blitz games the result does not follow from the final position: a player
+  resigns or loses on time in a position that is not lost, or the game is drawn in a won position
+  (bullet 27.4%, rapid 6.5%, over-the-board classical 4.1%).
 - After an opponent's blunder, the reply is itself a blunder 2.13× as often as usual in online
-  blitz and 3.38× in over-the-board classical; after your own blunder, 1.85× (online blitz).
+  blitz and 3.38× in over-the-board classical. After a player's own blunder, their next move is a
+  blunder 1.85× as often (online blitz).
 - An opponent's blunder goes unpunished on the next move in 39% of online blitz games below 1200
   and 28% at 2400+ (within three moves: 58% and 44%); over the board, 27% below 1800 and 16% at
   2400+.
-- Online, 4.0% of blitz resignations (4.2% over all speeds) come in positions that are not lost;
-  a deeper Stockfish search agrees for 126 of 150. In
-  [wFxi2JL6](https://lichess.org/game/wFxi2JL6) the 1912 player resigned a tablebase-drawn rook
-  endgame with 128 s left.
+- Online, 4.0% of blitz resignations come in positions that are not lost by the recorded eval. A
+  deeper search agrees for 126 of 150 such resignations. In
+  [wFxi2JL6](https://lichess.org/game/wFxi2JL6) a 1912 player resigned a rook endgame that is a
+  tablebase draw, with 128 s left.
 
 ## Reproduce
 
@@ -41,7 +42,8 @@ self-selected; see Limits.
   (resignation, loss on time, draw). The side whose result is below the position's value loses
   the difference, in half-points.
 - Causes: clock = a loss on time in a position not lost, or a deciding mistake with less than 10%
-  of base + 40 × increment left; endgame = six pieces or fewer, or non-pawn material ≤ 26 pawns.
+  of base + 40 × increment left; endgame = six pieces or fewer, or at most 26 pawns of non-pawn
+  material on the board.
 - Online figures over all speeds are post-stratified to the whole Lichess sample (cells: speed ×
   average rating band × how the game ended × length); figures by speed are shares of the sample.
 - Blunder: the mover's winning chances (Lichess formula, −1..1, eval clipped to ±10 pawns) fall
@@ -53,9 +55,9 @@ self-selected; see Limits.
 
 ## Limits
 
-- Someone asked for an analysis of the online games with evals; weighting corrects only for the
-  cell variables.
+- Lichess has evals only for games that someone asked it to analyse. Weighting corrects only for
+  the cell variables.
 - The recorded eval of a final position is shallow: the re-check keeps 126 of 150 non-lost
   resignations.
 - Broadcast games miss most games of weaker events, and some relays lack clocks.
-- A rating band of a player is the band of their rating in that game header (Lichess or FIDE).
+- A player's rating band comes from their rating in the game header (Lichess or FIDE).
