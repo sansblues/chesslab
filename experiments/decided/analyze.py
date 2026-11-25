@@ -100,7 +100,7 @@ def blunder_counts(p):
                       ["n", "a", "b", "c", "d"], "e")
     keys = pd.DataFrame({"source": b.source, "speed": b.speed, "band": b.band.fillna("?"),
                          "chances": np.minimum(9, np.floor((b.wc0 + 1) * 5)), "clock": clock, "phase": b.phase,
-                         "after_opponent": previous & ~own, "after_own": own & (b.ply >= 4)})
+                         "after_opponent": previous & ~own, "after_own": own & ~previous & (b.ply >= 4)})
     return b.groupby([keys[c] for c in keys]).blunder.agg(moves="size", blunders="sum").reset_index()
 
 
@@ -108,10 +108,10 @@ def punish_counts(p):
     """Replies to an opponent's blunder that give back more than half of what it gained."""
     gain = p.groupby("game").fall.shift()
     start = -p.groupby("game").wc0.shift() + gain / 2  # the mover's chances before the blunder, plus half the gain
+    later = p.groupby("game").wc1
+    worst = np.fmin(p.wc1, np.fmin(later.shift(-2), later.shift(-4)))  # the mover's next three moves
     b = p[p.fall.notna() & (p.ply >= 2)]
-    gain, start = gain[b.index], start[b.index]
-    later = b.groupby("game").wc1
-    worst = np.fmin(b.wc1, np.fmin(later.shift(-2), later.shift(-4)))
+    gain, start, worst = gain[b.index], start[b.index], worst[b.index]
     r = b.assign(missed=b.wc1 < start, missed_within_3=worst < start)[gain >= BLUNDER]
     r = r[pd.Series(list(zip(r.source, r.speed)), index=r.index).isin(POPULATIONS)]
     return r.groupby(["source", "speed", "band"]).agg(replies=("missed", "size"), missed=("missed", "sum"),
