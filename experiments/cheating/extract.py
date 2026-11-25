@@ -1,6 +1,6 @@
 """Read the broadcast games of Sep 2026. Write one row per player-game with rating, mistakes and loss
 (data/cheating/player_games.csv; counts in results/sample.csv), and the Stockfish view of every position
-of 420 classical games (data/cheating/positions.csv; about 8 min, kept if present)."""
+of 420 classical games (data/cheating/positions.csv, kept if present)."""
 import random
 from multiprocessing import Pool
 from pathlib import Path

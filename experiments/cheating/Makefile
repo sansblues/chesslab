@@ -1,4 +1,4 @@
-# make        rebuild results/ from the data (heavy, about 3 min)
+# make        rebuild results/ from the data (heavy, about 6 min)
 # make quick  rebuild the chart from results/ (seconds)
 HEAVY ?= flock $(abspath ../../.heavy.lock)
 PY ?= uv run python

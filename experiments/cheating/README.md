@@ -24,7 +24,7 @@ run.
 ## Reproduce
 
     make data            # once, from the repo root
-    make cheating        # about 8 min, one heavy job
+    make cheating        # about 6 min, one heavy job
     make -C experiments/cheating quick   # the chart from results/, seconds
 
 ## Method
