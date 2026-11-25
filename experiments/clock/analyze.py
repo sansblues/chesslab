@@ -1,4 +1,4 @@
-"""What clock time at move 20 is worth: within-player models on the game-sides of extract.py.
+"""How clock time at move 20 goes with the result: within-player models on the game-sides of extract.py.
 
 Reads data/clock/. Writes results/value_curve.csv, results/value.csv and results/effects.csv.
 Values are in expected score per game: 0.01 is 1 point per 100 games."""
@@ -26,7 +26,7 @@ class Within:
     """Least squares within players (player fixed effects), standard errors clustered by player (CR1)."""
 
     def __init__(self, X, players):
-        self.group = pd.factorize(players)[0]
+        self.group, self.players = pd.factorize(players)
         self.size = np.bincount(self.group)
         names, X = X.columns, self.demean(X.to_numpy(float, copy=True))
         gram = X.T @ X
@@ -45,26 +45,33 @@ class Within:
         return a
 
     def fit(self, y):
-        """Coefficients and their covariance."""
+        """Coefficients and their covariance; self.influence: each player's share of the coefficients' error."""
         y = self.demean(np.array(y, float))
         bread = np.linalg.inv(self.X.T @ self.X)
         b = bread @ (self.X.T @ y)
         e = y - self.X @ b
-        scores = np.column_stack([np.bincount(self.group, x * e) for x in self.X.T])
+        self.influence = pd.DataFrame(np.column_stack([np.bincount(self.group, x * e) for x in self.X.T]) @ bread,
+                                      self.players, self.names)
         (n, k), groups = self.X.shape, len(self.size)
-        V = groups / (groups - 1) * (n - 1) / (n - k) * bread @ scores.T @ scores @ bread
-        return pd.Series(b, self.names), pd.DataFrame(V, self.names, self.names)
+        V = groups / (groups - 1) * (n - 1) / (n - k) * self.influence.T @ self.influence
+        return pd.Series(b, self.names), V
+
+
+def clustered_se(influence):
+    """Standard error from each player's influence on an estimate."""
+    groups = len(influence)
+    return np.sqrt(groups / (groups - 1) * np.sum(influence ** 2))
 
 
 def iv(y, x, z, W, players):
     """Just-identified two-stage least squares of y on x with instrument z, within players, controls W;
-    standard error clustered by player."""
+    the estimate, its standard error clustered by player, and each player's influence on it."""
     m = Within(pd.concat([pd.DataFrame({"y": y, "x": x, "z": z}), W], axis=1), players)
     data, W = m.X[:, :3], m.X[:, 3:]
     y, x, z = (data - W @ np.linalg.lstsq(W, data, rcond=None)[0]).T
     b = z @ y / (z @ x)
-    groups = len(m.size)
-    return b, np.sqrt(groups / (groups - 1) * np.sum(np.bincount(m.group, z * (y - b * x)) ** 2)) / abs(z @ x)
+    influence = pd.Series(np.bincount(m.group, z * (y - b * x)) / (z @ x), m.players)
+    return b, clustered_se(influence), influence
 
 
 def linear(fit, weights):
@@ -139,27 +146,31 @@ def value(population, model, evaluated, controls, outcome):
     for all players and for the habitually short; the clock curve; the change of one outcome (time trouble or loss
     on time)."""
     m = Within(design(model), model.player)
-    fit = m.fit(model.y)
+    fit, influence = m.fit(model.y), m.influence
     curve = []
     for x in np.arange(1, 7) / 10:
         estimate, se = linear(fit, gain(np.array([x])))
         curve.append({"clock_left": x, "gain": estimate, "gain_low": estimate - Z * se, "gain_high": estimate + Z * se})
 
-    X = pd.concat([evaluated[["error", "opponent_error"]], ratings(evaluated)], axis=1)
-    score_per_error = -Within(X, evaluated.player).fit(evaluated.y)[0]["error"]
-    per_minute, per_minute_se = iv(controls.early_error / C, controls.minutes_used, np.log(controls.budget),
-                                   ratings(controls), controls.player)
+    errors = Within(pd.concat([evaluated[["error", "opponent_error"]], ratings(evaluated)], axis=1), evaluated.player)
+    score_per_error = -errors.fit(evaluated.y)[0]["error"]
+    per_minute, per_minute_se, per_minute_influence = iv(controls.early_error / C, controls.minutes_used,
+                                                         np.log(controls.budget), ratings(controls), controls.player)
     effects = [effect(population, "score_per_error", evaluated, score_per_error),
                effect(population, "early_error_per_minute", controls, per_minute, per_minute_se),
                effect(population, outcome, model, *linear(m.fit(model[outcome].astype(float)), gain(model.clock_left)),
                       model[outcome].mean())]
 
-    rows = []
+    rows = []  # net = gross + per_minute * score_per_error * minutes; its error from all three (delta method)
     for group, mask in (("all", np.ones(len(model), bool)), ("habitually_short", habitually_short(model))):
-        gross, gross_se = linear(fit, gain(model.clock_left[mask]))
-        cost_per_error = score_per_error * C * DELTA * model.budget[mask].mean() / 60  # times win chance per minute
-        cost, cost_se = -per_minute * cost_per_error, per_minute_se * cost_per_error
-        net, net_se = gross - cost, np.hypot(gross_se, cost_se)
+        weights = gain(model.clock_left[mask])
+        gross, gross_se = linear(fit, weights)
+        minutes = C * DELTA * model.budget[mask].mean() / 60  # the minutes saved, times the C early moves
+        cost = -per_minute * score_per_error * minutes
+        net = gross - cost
+        net_se = clustered_se((influence[weights.index] @ weights)
+                              .add(minutes * score_per_error * per_minute_influence, fill_value=0)
+                              .add(-minutes * per_minute * errors.influence["error"], fill_value=0))
         rows.append({"population": population, "group": group, "game_sides": mask.sum(),
                      "players": model.player[mask].nunique(), "median_clock_left": model.clock_left[mask].median(),
                      "time_trouble": model.time_trouble[mask].mean(),
@@ -199,7 +210,7 @@ def natural_experiments(sides):
     W = pd.concat([ratings(book), spline(book.win_chance, CHANCE_KNOTS, "win_chance"), np.log1p(book.earlier_games),
                    book[["legal_moves", "captures_checks", "material", "opponent_clock_left"]]], axis=1)
     clock = (book.clock_left * 10).rename("clock")  # per DELTA
-    effects.append(effect(population, "book_depth_iv", book, *iv(book.y, clock, book.book_moves, W, book.player)))
+    effects.append(effect(population, "book_depth_iv", book, *iv(book.y, clock, book.book_moves, W, book.player)[:2]))
     fit = Within(pd.concat([clock, W], axis=1), book.player).fit(book.y)
     effects.append(effect(population, "book_depth_regression", book, *linear(fit, pd.Series({"clock": 1.0}))))
 
