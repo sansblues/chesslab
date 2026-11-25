@@ -9,7 +9,7 @@ import pandas as pd
 import statsmodels.formula.api as smf
 
 from chesslab import DATA, samples
-from chesslab.games import win_chance
+from chesslab.games import expected_score, win_chance
 
 RESULTS = Path(__file__).parent / "results"
 CONTROLS = ("rating + I(rating**2) + bs(age, knots=(14,18,25,40,60), degree=1) + C(k) + C(sex) + z_error"
@@ -187,7 +187,7 @@ def critical_moves(P):
 def main():
     P, analysed = positions()
     G = pd.read_parquet(DATA / "thinking" / "game_sides.parquet")
-    G["over"] = G.score - 1 / (1 + 10 ** ((G.opponent_elo - G.elo) / 400))
+    G["over"] = G.score - expected_score(G.elo, G.opponent_elo)
     X, halves = players(P, G)
     save([{"eligible_players": G.fide_id.nunique(), "players": P.fide_id.nunique(),
                "game_sides": len(P.groupby(["fide_id", "game"])), "positions_analysed": analysed, "positions": len(P),

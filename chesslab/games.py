@@ -67,6 +67,11 @@ def win_chance(cp):
     return 1 / (1 + np.exp(-0.00368208 * np.clip(cp, -1000, 1000)))
 
 
+def expected_score(elo, opponent_elo):
+    """Elo expected score, 0..1, of a player against an opponent. Works on numbers and arrays."""
+    return 1 / (1 + 10 ** ((opponent_elo - elo) / 400))
+
+
 def lichess_speed(time_control: str | None) -> str:
     """Speed of a Lichess TimeControl header such as "180+2", from base + 40 × increment."""
     try:

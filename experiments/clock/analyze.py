@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from chesslab import DATA
-from chesslab.games import win_chance
+from chesslab.games import expected_score, win_chance
 
 IN = DATA / "clock"
 RESULTS = Path(__file__).parent / "results"
@@ -116,7 +116,7 @@ def repeated(df):
 
 def prepare(sides):
     sides = repeated(sides)
-    sides["y"] = sides.score - 1 / (1 + 10 ** ((sides.opponent_elo - sides.elo) / 400))
+    sides["y"] = sides.score - expected_score(sides.elo, sides.opponent_elo)
     sides["clock_left"] = sides.clock_left.clip(upper=1)
     sides["opponent_clock_left"] = sides.opponent_clock_left.clip(upper=1)
     return sides
