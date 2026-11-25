@@ -9,15 +9,11 @@ import pandas as pd
 import statsmodels.formula.api as smf
 
 from chesslab import DATA, samples
+from chesslab.games import win_chance
 
 RESULTS = Path(__file__).parent / "results"
 CONTROLS = ("rating + I(rating**2) + bs(age, knots=(14,18,25,40,60), degree=1) + C(k) + C(sex) + z_error"
             " + z_over + log_games + z_mean_log_time + z_time_trouble + prior + prior_missing")
-
-
-def win(cp):
-    """Lichess win probability (0..1) of the side whose eval is cp, clipped to ±1000."""
-    return 1 / (1 + np.exp(-0.00368208 * np.clip(cp, -1000, 1000)))
 
 
 def spearman(frame, x, y, by):
@@ -53,11 +49,11 @@ def positions():
     P = pd.read_parquet(DATA / "thinking" / "positions.parquet").merge(S, on="fen")
     analysed = len(P)
     P = P[P.best_cp.abs() <= 300].copy()
-    P["voc"] = np.maximum(0, win(P.best_cp) - win(P.depth4_cp))  # what a quick (depth-4) look costs
-    P["voc8"] = np.maximum(0, win(P.best_cp) - win(P.depth8_cp))
+    P["voc"] = np.maximum(0, win_chance(P.best_cp) - win_chance(P.depth4_cp))  # what a quick (depth-4) look costs
+    P["voc8"] = np.maximum(0, win_chance(P.best_cp) - win_chance(P.depth8_cp))
     P["log_time"] = np.log1p(P.think_time)
     P["paced_time"] = P.log_time - P.groupby(["fide_id", "game"]).log_time.transform("mean")
-    P["error"] = np.maximum(0, win(P.eval_before) - win(P.eval_after))  # stored Lichess evals
+    P["error"] = np.maximum(0, win_chance(P.eval_before) - win_chance(P.eval_after))  # stored Lichess evals
     return P, analysed
 
 

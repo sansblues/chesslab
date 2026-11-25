@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 
 from chesslab import DATA
+from chesslab.games import win_chance
 
 IN = DATA / "decided"
 RESULTS = Path(__file__).parent / "results"
@@ -27,11 +28,6 @@ def band(elo, source):
         rows = (source == name) & elo.notna()
         out[rows] = labels[np.searchsorted(cuts, elo[rows], side="right")]
     return out
-
-
-def winning_chances(cp):
-    """Lichess's winning chances, -1..1, for the side whose value is cp."""
-    return 2 / (1 + np.exp(-0.00368208 * np.clip(cp, -1000, 1000))) - 1
 
 
 def load_games():
@@ -63,8 +59,8 @@ def file_moves(path, games):
     p["band"] = np.where(white, p.white_band, p.black_band)
     p["phase"] = np.select([p.material <= 26, p.ply < 30], ["endgame", "opening"], "middlegame")
     before = p.groupby("game").value.shift().where(p.ply > 0, 20)
-    p["wc0"] = winning_chances(p.side * before)
-    p["wc1"] = winning_chances(p.side * p.value)
+    p["wc0"] = 2 * win_chance(p.side * before) - 1  # Lichess winning chances, -1..1
+    p["wc1"] = 2 * win_chance(p.side * p.value) - 1
     p["fall"] = p.wc0 - p.wc1
     p["blunder"] = p.fall >= BLUNDER
     p["class"] = np.sign(p.value).where(p.value.abs() >= WON, 0).where(p.value.notna())

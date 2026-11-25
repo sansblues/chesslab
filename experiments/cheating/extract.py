@@ -1,7 +1,6 @@
 """Read the broadcast games of Sep 2026. Write one row per player-game with rating, mistakes and loss
 (data/cheating/player_games.csv; counts in results/sample.csv), and the Stockfish view of every position
 of 420 classical games (data/cheating/positions.csv; about 8 min, kept if present)."""
-import math
 import random
 from multiprocessing import Pool
 from pathlib import Path
@@ -11,6 +10,7 @@ import pandas as pd
 
 from chesslab import DATA, games
 from chesslab.engine import Stockfish
+from chesslab.games import win_chance
 
 SOURCE = DATA / "broadcast" / "lichess_db_broadcast_2026-09.pgn.zst"
 OUT = DATA / "cheating"
@@ -19,8 +19,8 @@ FIRST_PLY = 16  # the first 8 moves of each side are not judged
 
 
 def win(cp):
-    """Lichess win% of the side whose eval is cp, clipped to ±1000 (mates count as ±1000)."""
-    return 100 / (1 + math.exp(-0.00368208 * max(-1000, min(1000, cp))))
+    """Lichess win% (0..100) of the side whose eval is cp."""
+    return 100 * win_chance(cp)
 
 
 def speed(clock):

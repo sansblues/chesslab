@@ -13,16 +13,12 @@ import numpy as np
 import pandas as pd
 
 from chesslab import DATA, games, samples
+from chesslab.games import win_chance
 
 OUT = DATA / "clock"
 C = 20  # the checkpoint: the side's 20th move
 INCREMENTS = np.array([0, 5, 10, 15, 20, 30, 60])
 ABORTED = {"Abandoned", "Rules infraction", "Unterminated"}
-
-
-def win_chance(cp):
-    """Lichess win probability for the side whose view cp is in (centipawns)."""
-    return 1 / (1 + np.exp(-0.00368208 * np.clip(cp, -1000, 1000)))
 
 
 def replay(sans):

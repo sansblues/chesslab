@@ -5,6 +5,7 @@ import itertools
 import re
 from dataclasses import dataclass
 
+import numpy as np
 import zstandard
 
 MATE = 32000  # eval of mate in n: MATE - n if White mates, -(MATE - n) if Black mates
@@ -58,6 +59,12 @@ def read(path, partial=False):
     the games cut at either end are dropped."""
     for headers, movetext in _split(_lines(path, partial), drop_last=partial):
         yield Game(headers, *_moves(movetext))
+
+
+def win_chance(cp):
+    """Lichess win chance, 0..1, of the side whose eval is cp centipawns, clipped to ±1000 (mates count as
+    ±1000). Works on numbers and arrays."""
+    return 1 / (1 + np.exp(-0.00368208 * np.clip(cp, -1000, 1000)))
 
 
 def lichess_speed(time_control: str | None) -> str:

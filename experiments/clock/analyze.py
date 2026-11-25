@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from chesslab import DATA
+from chesslab.games import win_chance
 
 IN = DATA / "clock"
 RESULTS = Path(__file__).parent / "results"
@@ -238,8 +239,7 @@ def online(speed):
                                      "lost_on_time"])
     sides = prepare(sides.merge(pd.read_parquet(IN / "stockfish"), on=["key", "color"], how="left"))
     sides["has_evals"] = sides.evals >= 0.95
-    engine = 1 / (1 + np.exp(-0.00368208 * sides.cp.clip(-1000, 1000)))
-    sides["win_chance"] = sides.win_chance.where(sides.has_evals, engine)
+    sides["win_chance"] = sides.win_chance.where(sides.has_evals, win_chance(sides.cp))
     time_control = sides.base.astype(str) + "+" + sides.increment.astype(str)
     controls = repeated(sides[time_control.isin(ONLINE_CONTROLS[speed]) & sides.has_evals
                               & (sides.early_evals >= 0.9 * C)])

@@ -9,14 +9,10 @@ import numpy as np
 import pandas as pd
 
 from chesslab import DATA, games, samples
+from chesslab.games import win_chance
 
 OUT = DATA / "thinking"
 BASELINE = samples.broadcast_files()[:12]  # 2024-07 ... 2025-06
-
-
-def win(cp):
-    """Lichess win probability (0..1) of the side whose eval is cp, clipped to ±1000."""
-    return 1 / (1 + np.exp(-0.00368208 * np.clip(cp, -1000, 1000)))
 
 
 def online(game):
@@ -85,7 +81,7 @@ def side_features(game, color):
         return None
     t, before, after = (np.array([m[i] for m in moves]) for i in (1, 3, 4))
     ok = ~np.isnan(before) & ~np.isnan(after) & (np.abs(before) < 9000)
-    loss = np.maximum(0, win(before[ok]) - win(after[ok])) if ok.any() else np.array([np.nan])
+    loss = np.maximum(0, win_chance(before[ok]) - win_chance(after[ok])) if ok.any() else np.array([np.nan])
     own = game.clocks[color:80:2]
     own = own[~np.isnan(own)]
     return dict(mean_log_time=float(np.mean(np.log1p(t))), error=float(np.mean(loss)),
