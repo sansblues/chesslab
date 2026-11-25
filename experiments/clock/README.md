@@ -1,11 +1,13 @@
 # Does more clock at move 20 go with better results?
 
-In classical over-the-board chess, 10% more of the clock at move 20 goes with about 1.1 more points
-per 100 games (8 Elo), and 2.0 (14 Elo) for players who are habitually short of time. These are net
-values: saving the time early costs about 0.4 points in errors. The data are observational, so these
-are estimates within players, not proof, and a confirmation on fresh data is needed.
+Yes, a little. In classical over-the-board chess, reaching move 20 with 10% more of the time (11
+minutes at 90+30) goes with about +8 Elo, and +14 for players who are usually short of time. This
+already counts the small cost of playing faster early. The data are observational: these are
+comparisons within players, not proof.
 
-![Points per 100 games with 10% more clock: 4 at 10% of the clock left, under 1 at 60%](clock.svg)
+The less time is left, the more extra time goes with (before the cost of playing faster early):
+
+![Elo with 11 more minutes at move 20: +28 when 10% of the time is left, +5 at 60%](clock.svg)
 
 ## Findings
 

@@ -11,10 +11,8 @@ Mostly to plain mistakes. But the higher the rating, the more the clock decides:
 
 ### [Does more clock at move 20 go with better results?](experiments/clock)
 
-Yes, a little. 10% more clock at move 20 goes with about 1 point more per 100 classical games, and 2
-for players who are often short of time.
-
-[![Points per 100 games with 10% more clock, by clock left at move 20](experiments/clock/clock.svg)](experiments/clock)
+Yes, a little. Reaching move 20 with 11 more minutes (in a 90+30 game) goes with about +8 Elo, and +14
+for players who are usually short of time.
 
 ### [Do textbook endgame rules hold under perfect play?](experiments/endgames)
 
