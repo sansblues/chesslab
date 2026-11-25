@@ -12,17 +12,18 @@ year.
 - The test was pre-registered: the analysis was fixed before any rating change or game result was
   computed. The positive control works: the error in a player's games predicts rating change
   (−12.1 Elo per SD, p < 1e−10).
-- Reliability of allocation quality: 0.041 (95% CI 0.013 to 0.073), against 0.45 for the mean
-  think time and 0.53 for its variability. A reliability of 0.7 would need about 162 games a player.
+- Split-half reliability of allocation quality (3 games against 3): 0.041 (95% CI 0.013 to
+  0.073), against 0.45 for the mean think time and 0.53 for its variability. A reliability of 0.7 would need about 162 games a player.
 - On average, stronger players do allocate better: the correlation of think time with the value
   of thinking rises from 0.115 (rating ≤ 1600) to 0.165 (> 2400), as Russek et al. (Cognitive
   Science, 2025) found.
 - Within a player, games with better allocation score better: +0.013 points per SD
   (95% CI 0.007 to 0.019, 17,164 games). This is an association only.
-- Time is worth more where the value of thinking is high: a low clock (< 10 min) raises the error
-  by 0.46 win-% points, and by 0.99 points more (95% CI 0.86 to 1.12) in critical positions (top
-  20%), about 3 times as much. But critical moves played fast (< 30 s) hold only 4.8% of all error,
-  and they lose less than critical moves played slowly (2.87 against 3.52 win-% points).
+- A low clock goes with more error, most of all where the value of thinking is high: with less
+  than 10 min left, the error is 0.46 win-% points higher, and 0.99 points more (95% CI 0.86 to
+  1.12) in critical positions (top 20%), about 3 times as much. But critical moves played fast
+  (< 30 s) hold only 4.8% of all error, and they lose less than critical moves played slowly
+  (2.87 against 3.52 win-% points).
 
 ## Reproduce
 
@@ -38,7 +39,7 @@ year.
   Jun 2025), with clocks to the second and engine evals on at least 90% of the plies; FIDE standard
   lists of Jul 2024, Jul 2025 and Jul 2026.
 - Players: 8,224 with a FIDE ID, at least 10 such games and a rating in the Jul 2025 and Jul 2026
-  lists. Analysed: 4,000 of them at random, 6 random games each: 635,837 positions, 501,336 of them
+  lists. Analysed: 4,000 of them at random, up to 6 random games each: 635,837 positions, 501,336 of them
   not decided (|eval| ≤ 300 cp). These two cuts, made for compute, were logged before any outcome.
 - Positions: the player's moves 9 to 40 with more than one legal move. Think time = clock before −
   clock after + increment.

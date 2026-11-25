@@ -2,7 +2,7 @@
 Reads data/thinking/positions.parquet. Writes data/thinking/stockfish/chunk_*.parquet: per unique FEN
 the best move of a depth-4 and of a depth-8 search, and the scores (centipawns, side to move) of the
 best move and of both shallow moves, from a 30,000-node MultiPV-2 search; a shallow move outside its
-top two gets a 7,500-node search restricted to the shallow moves. About 5 hours on 12 cores; FENs in
+top two gets a 7,500-node search restricted to the shallow moves. About 2.5 hours on 12 cores; FENs in
 existing chunks are skipped."""
 from multiprocessing import Pool
 

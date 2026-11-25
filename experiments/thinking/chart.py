@@ -24,4 +24,5 @@ for measure, color, label in (("error", plot.GREY, "Error"), ("allocation_qualit
 ax.axhline(0, color=plot.DARK_GREY, linewidth=0.8, zorder=1)
 ax.set_xlabel("Measure, adjusted for the controls (SD)")
 ax.set_xlim(right=ax.get_xlim()[1] + 0.9)
+ax.set_ylim(bottom=ax.get_ylim()[0] - 2)  # room for the error label
 plot.save(fig, HERE / "thinking.svg")
